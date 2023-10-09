@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend/ChefCompanion
+      dockerfile: Dockerfile
+      target: development
+    container_name: frontend
+    volumes:
+      - ./frontend/ChefCompanion/src:/frontend/src
+      - ./frontend/ChefCompanion/public:/frontend/public
+      - ./frontend/ChefCompanion/dist:/frontend/dist
+    ports:
+      - '3000:3000'
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #     target: development
+  #   container_name: backend
+  #   volumes:
+  #     - ./backend:/backend
+  #   ports:
+  #     - '8000:8000'
+  # database:
+  #   build:
+  #     context: ./database
+  #     dockerfile: Dockerfile
+  #     target: development
+  #   container_name: database
+  #   volumes:
+  #     - ./database:/database
+  #   ports:
+  #     - '5432:5432'
