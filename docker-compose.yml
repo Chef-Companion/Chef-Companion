@@ -1,3 +1,4 @@
+#Development Docker Compose
 version: '3.8'
 
 services:
@@ -13,23 +14,33 @@ services:
       - ./frontend/ChefCompanion/dist:/frontend/dist
     ports:
       - '3000:3000'
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #     target: development
-  #   container_name: backend
-  #   volumes:
-  #     - ./backend:/backend
-  #   ports:
-  #     - '8000:8000'
-  # database:
-  #   build:
-  #     context: ./database
-  #     dockerfile: Dockerfile
-  #     target: development
-  #   container_name: database
-  #   volumes:
-  #     - ./database:/database
-  #   ports:
-  #     - '5432:5432'
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: backend
+    environment:
+        DATABASE_PORT: 5432
+        DATABASE_HOST: database
+        DATABASE_NAME: chefCompanionDB
+        DATABASE_USER: chef
+        DATABASE_PASSWORD: chef
+        DJANGO_DEBUG: True
+    volumes:
+      - ./backend:/backend
+    ports:
+      - '8000:8000'
+
+  database:
+    image: postgres:16
+    container_name: database
+    environment:
+        POSTGRES_DB: chefCompanionDB
+        POSTGRES_USER: chef 
+        POSTGRES_PASSWORD: chef 
+    volumes:
+      - ./database:/database
+    ports:
+      - '5432:5432'
