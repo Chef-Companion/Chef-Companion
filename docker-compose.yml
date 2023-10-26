@@ -14,6 +14,8 @@ services:
       - ./frontend/ChefCompanion/dist:/frontend/dist
     ports:
       - '3000:3000'
+    depends_on:
+      - backend
 
   backend:
     build:
@@ -32,6 +34,8 @@ services:
       - ./backend:/backend
     ports:
       - '8000:8000'
+    depends_on:
+      - database
 
   database:
     image: postgres:16
