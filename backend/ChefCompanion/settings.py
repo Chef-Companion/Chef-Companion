@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [ 'backend' ]  if DEBUG == True else []
 # Application definition
 
 INSTALLED_APPS = [
+    'chefCompanionAPI',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
