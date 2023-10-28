@@ -1,4 +1,4 @@
 Django==4.2.6
 python-decouple
-psycopg2
+psycopg2-binary
 djangorestframework
