@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import SearchPanel from './pages/landing'
 
 function App() {
   const [backend, setBackend] = useState(false);
@@ -16,6 +17,9 @@ function App() {
       <br></br>
       Backend Connection:
       {backend ? ' Working' : ' Not Working'}
+      <div>
+        <SearchPanel/>
+      </div>
     </div>
   )
 }
