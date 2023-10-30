@@ -1,4 +1,5 @@
 from django.db import models
+import ast
 
 # Create your models here.
 
@@ -9,7 +10,24 @@ class Recipes(models.Model):
     directions = models.CharField(max_length=1024, null=False, blank=False)
     link = models.CharField(max_length=255, null=False, blank=False)
     source = models.CharField(max_length=255, null=False, blank=False)
-    ner = models.CharField(max_length=1024, null=False, blank=False, db_column="NER")
+    ner = models.CharField(max_length=1024, null=False, blank=False, db_column="NER") # Simplified list of ingredients
+
+    # Convert Django Recipies object to python dictionary
+    def to_dict(self):
+        data = {
+            "id": int(self.id),
+            "title": self.title,
+            "ingredients": ast.literal_eval(self.ingredients), # To python list
+            "directions": ast.literal_eval(self.directions),  # To python list
+            "link": self.link,
+            "source": self.source,
+            "NER": ast.literal_eval(self.ner)  # To python list,
+        }
+        return(data)
+    
+    # Get length of ingredients
+    def ingredientsLength(self):
+        return len(ast.literal_eval(self.ner))
 
     class Meta:
         db_table = "recipes"
