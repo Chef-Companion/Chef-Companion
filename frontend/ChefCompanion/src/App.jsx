@@ -4,6 +4,8 @@ import HomePage from './views/HomePage';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import './App.css';
+import { useEffect, useState } from 'react';
+import SearchPanel from './pages/landing';
 
 function App() {
   const [backend, setBackend] = useState(false);
@@ -24,6 +26,9 @@ function App() {
         <Footer />
         </div>
     </Router>
+    <div>
+      <SearchPanel/>
+    </div>
   );
 }
 
