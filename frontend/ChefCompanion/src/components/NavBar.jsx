@@ -19,7 +19,7 @@ function NavBar() {
             <div className="dropdownDiv">
               <ul className="dropdownUl">
                 <li><Link to="/profile">Profile</Link></li>
-                <li><Link to="/my-sessions">My Recipes</Link></li>
+                <li><Link to="/recipes">My Recipes</Link></li>
                 <li><Link to="/login" onClick={handleLogout}>Logout</Link></li>
               </ul>
             </div>
