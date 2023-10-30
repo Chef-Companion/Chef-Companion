@@ -17,8 +17,8 @@ class Recipes(models.Model):
         data = {
             "id": int(self.id),
             "title": self.title,
-            "ingredients": ast.literal_eval(self.ingredients) # To python list,
-            "directions": ast.literal_eval(self.directions)  # To python list,,
+            "ingredients": ast.literal_eval(self.ingredients), # To python list
+            "directions": ast.literal_eval(self.directions),  # To python list
             "link": self.link,
             "source": self.source,
             "NER": ast.literal_eval(self.ner)  # To python list,
