@@ -1,8 +1,14 @@
 from django.db import models
 import ast
 
-# Create your models here.
 
+# Create your models here.
+class IngredientList(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, null=False, blank=False,default="insert name")
+    experationDate = models.CharField(max_length=255, null=False, blank=False,default="insert date")
+    amount = models.CharField(max_length=255, null=False, blank=False,default="insert amount")
+    
 class Recipes(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, null=False, blank=False)
@@ -31,3 +37,4 @@ class Recipes(models.Model):
 
     class Meta:
         db_table = "recipes"
+        

@@ -26,4 +26,14 @@ class Migration(migrations.Migration):
                 'db_table': 'recipes',
             },
         ),
+        migrations.CreateModel(
+            name='ingredientList',
+            fields=[
+                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('name', models.CharField(max_length=255, null=False, blank=False)),
+                ('experationDate', models.CharField(max_length=255, null=False, blank=False)),
+            ],
+            options={
+            },
+        ),
     ]
