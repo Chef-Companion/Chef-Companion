@@ -1,27 +1,35 @@
-import { useEffect, useState } from 'react'
-import './App.css'
-import SearchPanel from './pages/landing'
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import HomePage from './views/HomePage';
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
+import './App.css';
+import { useEffect, useState } from 'react';
+import SearchPanel from './pages/landing';
 
 function App() {
   const [backend, setBackend] = useState(false);
 
   useEffect(() => {
     fetch('/api')
-      .then(x => x.json())
-      .then(data => setBackend(data.working));
-  }, [])
+      .then((response) => response.json())
+      .then((data) => setBackend(data.working));
+  }, []);
 
   return (
-    <div className='App'>
-      Frontend: Working
-      <br></br>
-      Backend Connection:
-      {backend ? ' Working' : ' Not Working'}
-      <div>
-        <SearchPanel/>
-      </div>
+    <Router>
+      <div className='App'>
+        <NavBar /> 
+        <Routes>
+          <Route path="/" element={<HomePage />} /> 
+        </Routes>
+        <Footer />
+        </div>
+    </Router>
+    <div>
+      <SearchPanel/>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
