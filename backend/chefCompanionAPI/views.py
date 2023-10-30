@@ -4,6 +4,9 @@ from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
 from chefCompanionAPI.models import Recipes
 import json
+from rest_framework import generics
+from .models import IngredientList
+from .serializers import IngredientListSerializer
 
 # Create your views here.
 
@@ -47,3 +50,7 @@ def recipes(request):
         objects = list(filter(lambda x: x.ingredientsLength() == len(ingredients), objects))
     # Build json response
     return JsonResponse({ "result": [object.to_dict() for object in objects] })
+
+class ingredientRequest(generics.ListCreateAPIView):
+    queryset = IngredientList.objects.all()
+    serializer_class = IngredientListSerializer
