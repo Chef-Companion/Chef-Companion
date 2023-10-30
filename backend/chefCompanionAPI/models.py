@@ -10,7 +10,6 @@ class Recipes(models.Model):
     directions = models.CharField(max_length=1024, null=False, blank=False)
     link = models.CharField(max_length=255, null=False, blank=False)
     source = models.CharField(max_length=255, null=False, blank=False)
-<<<<<<< HEAD
     ner = models.CharField(max_length=1024, null=False, blank=False, db_column="NER") # Simplified list of ingredients
 
     # Convert Django Recipies object to python dictionary
@@ -29,9 +28,6 @@ class Recipes(models.Model):
     # Get length of ingredients
     def ingredientsLength(self):
         return len(ast.literal_eval(self.ner))
-=======
-    ner = models.CharField(max_length=1024, null=False, blank=False, db_column="NER")
->>>>>>> add readme
 
     class Meta:
         db_table = "recipes"
