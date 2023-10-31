@@ -7,12 +7,19 @@ import json
 from rest_framework import generics
 from .models import IngredientList
 from .serializers import IngredientListSerializer
+from .utils import get_unique_ingredients
 
 # Create your views here.
 
 @api_view(["GET"])
 def base(request):
     return JsonResponse({ "working": True })
+
+# Gets all the unique ingredients in the "NER" column
+@api_view(["GET"])
+def unique_ingredients(request):
+    unique_ingredients = get_unique_ingredients()
+    return JsonResponse({'unique_ingredients': unique_ingredients})
 
 # Return recipes
 @api_view(["POST"])

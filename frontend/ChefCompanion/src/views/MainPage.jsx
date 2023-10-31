@@ -1,5 +1,7 @@
 import React from 'react';
 import './MainPage.css'; 
+import UniqueIngredients from '../components/UniqueIngredients';
+
 
 function MainPage() {
   return (
@@ -12,9 +14,7 @@ function MainPage() {
       </div>
       <div className="tab right-tab">
         <h2>Ingredients</h2>
-        <div className="scrollable-content">
-          {"ingredients"}
-        </div>
+        <UniqueIngredients />
       </div>
     </div>
   );
