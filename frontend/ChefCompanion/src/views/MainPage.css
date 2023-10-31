@@ -1,24 +1,27 @@
 .main-container {
   display: flex;
-  justify-content: space-between; 
-  margin: 0px; 
+  justify-content: space-between;
+  margin: 20px;
 }
 
 .tab {
-  width: 47%; 
-  height: 75vh; 
+  width: 60%; 
   border: 1px solid #ccc;
   padding: 20px;
   overflow: hidden;
 }
 
 .left-tab {
-  margin-right: 10px;
+  margin-right: 600px; 
+}
+
+.right-tab {
+  margin-left: 10px; 
 }
 
 .scrollable-content {
-  height: 100%; 
-  overflow-y: auto;
+  max-height: 300px; 
+  overflow-y: auto; 
   border: 1px solid #ddd;
   padding: 10px;
 }
