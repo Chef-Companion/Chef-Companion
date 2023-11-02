@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './MainPage.css';
+import axios from 'axios';
 
 function MainPage() {
+  const [recipes, setRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [newIngredient, setNewIngredient] = useState('');
 
@@ -17,17 +19,53 @@ function MainPage() {
     setIngredients(filteredIngredients);
   };
 
+  const getRecipes = () => {
+    const filteredIngredients = ingredients.filter((ingredient) => ingredient.checked).map(x => x.name);
+    console.log(filteredIngredients)
+    axios.post('/api/recipes',
+    {
+      ingredients: filteredIngredients,
+      ingredients_mode: 'exact',
+      ingredient_mode: 'exact'
+    }) // Replace with your actual API URL
+      .then((response) => {
+        console.log(response.data.result)
+      })
+      .catch((error) => {
+        console.error('Error fetching recipes:', error);
+      });
+  };
+
   const handleToggleCheckbox = (index) => {
     const updatedIngredients = [...ingredients];
     updatedIngredients[index].checked = !updatedIngredients[index].checked;
     setIngredients(updatedIngredients);
   };
 
+  useEffect(() => {
+    // Make an HTTP GET request to your backend endpoint to fetch recipes
+    console.log('test')
+    axios.get('/api/recipes') // Replace with your actual API URL
+      .then((response) => {
+        console.log(response.data.result)
+        setRecipes(response.data.result);
+      })
+      .catch((error) => {
+        console.error('Error fetching recipes:', error);
+      });
+  }, []); 
+
   return (
     <div className="main-container">
       <div className="tab left-tab">
         <h2 className="tab-header">Recipes</h2>
-        <div className="scrollable-content">{"recipes"}</div>
+        <div className="scrollable-content">
+          <ul>
+            {recipes.map((recipe, index) => (
+              <li key={index}>{recipe.title}</li>
+            ))}
+          </ul>
+        </div>
       </div>
       <div className="tab right-tab">
         <h2 className="tab-header">Ingredients</h2>
@@ -55,6 +93,9 @@ function MainPage() {
           </div>
           <button className="action-button" onClick={handleRemoveIngredients}>
             Remove Selected Ingredients
+          </button>
+          <button className="action-button" onClick={getRecipes}>
+            get
           </button>
         </div>
       </div>
