@@ -5,7 +5,7 @@
 }
 
 .tab {
-  width: 100%;
+  width: 200%;
   border: 1px solid #ccc;
   padding: 20px;
   overflow: hidden;
@@ -27,7 +27,6 @@
   overflow: auto;
   border: 1px solid #ddd;
   padding: 10px;
-  position: relative;
 }
 
 .tab-header {
@@ -42,17 +41,18 @@
   height: 50px;
   padding: 10px;
   margin: 10px 0; /* Add spacing above and below buttons */
-  background-color: #ffaa00; 
-  color: white; 
+  background-color: #ffaa00; /* Green background */
+  color: white; /* White text */
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .ingredient-list {
-  display: flex;
+  max-height: 100px; /* Add a maximum height to limit the growth */
+  overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
+  display: flex; /* Keep the flex display for the column layout */
   flex-direction: column;
-  
 }
 
 .ingredient-item {
@@ -62,8 +62,7 @@
   height: 30px; /* Fixed height to ensure vertical alignment */
 }
 
-
+/* Additional styling for the checkbox and ingredient */
 input[type="checkbox"] {
   margin-right: 10px; /* Add spacing between checkbox and ingredient text */
 }
-
