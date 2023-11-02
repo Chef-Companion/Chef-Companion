@@ -5,30 +5,65 @@
 }
 
 .tab {
-  width: 60%; 
+  width: 100%;
   border: 1px solid #ccc;
   padding: 20px;
   overflow: hidden;
+  text-align: center; /* Center the tab headers */
 }
 
 .left-tab {
-  margin-right: 600px; 
+  border: 10px solid #ffaa00;
+  margin-right: 10px;
 }
 
 .right-tab {
-  margin-left: 10px; 
+  border: 10px solid #ffaa00;
+  margin-left: 500px;
 }
 
 .scrollable-content {
-  max-height: 300px; 
-  overflow-y: auto; 
+  max-height: 300px;
+  overflow: auto;
   border: 1px solid #ddd;
   padding: 10px;
+  position: relative;
 }
 
-h2 {
+.tab-header {
   background-color: #f0f0f0;
   margin: 0;
   padding: 10px;
   border-bottom: 1px solid #ccc;
 }
+
+.action-button {
+  width: 100%; /* Match the width of the input bar */
+  height: 50px;
+  padding: 10px;
+  margin: 10px 0; /* Add spacing above and below buttons */
+  background-color: #ffaa00; 
+  color: white; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ingredient-list {
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.ingredient-item {
+  display: flex;
+  align-items: center; /* Center checkbox and ingredient vertically */
+  
+  height: 30px; /* Fixed height to ensure vertical alignment */
+}
+
+
+input[type="checkbox"] {
+  margin-right: 10px; /* Add spacing between checkbox and ingredient text */
+}
+
