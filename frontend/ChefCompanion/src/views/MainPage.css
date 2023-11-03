@@ -5,7 +5,7 @@
 }
 
 .tab {
-  width: 50%;
+  max-width: 200px;
   border: 1px solid #ccc;
   padding: 20px;
   overflow: hidden;
@@ -55,7 +55,7 @@
 }
 
 .ingredient-list {
-  max-height: 100px; /* Add a maximum height to limit the growth */
+  max-height: 40px; /* Add a maximum height to limit the growth */
   overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
   display: flex; /* Keep the flex display for the column layout */
   flex-direction: column;
