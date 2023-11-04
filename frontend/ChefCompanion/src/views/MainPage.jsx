@@ -26,11 +26,11 @@ function MainPage() {
   return (
     <div className="main-container">
       <div className="tab left-tab">
-        <h2>Recipes</h2>
+        <h2 className="tab-header">Recipes</h2>
         <div className="scrollable-content">{"recipes"}</div>
       </div>
       <div className="tab right-tab">
-        <h2>Ingredients</h2>
+        <h2 className="tab-header">Ingredients</h2>
         <div className="scrollable-content">
           <input
             type="text"
@@ -38,10 +38,12 @@ function MainPage() {
             value={newIngredient}
             onChange={(e) => setNewIngredient(e.target.value)}
           />
-          <button onClick={handleAddIngredient}>Add Ingredient</button>
-          <div>
+          <button className="action-button" onClick={handleAddIngredient}>
+            Add Ingredient
+          </button>
+          <div className="ingredient-list">
             {ingredients.map((ingredient, index) => (
-              <div key={index}>
+              <div className="ingredient-item" key={index}>
                 <input
                   type="checkbox"
                   checked={ingredient.checked}
@@ -51,7 +53,9 @@ function MainPage() {
               </div>
             ))}
           </div>
-          <button onClick={handleRemoveIngredients}>Remove Selected Ingredients</button>
+          <button className="action-button" onClick={handleRemoveIngredients}>
+            Remove Selected Ingredients
+          </button>
         </div>
       </div>
     </div>
