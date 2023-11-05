@@ -2,6 +2,9 @@
   display: flex;
   justify-content: space-between;
   margin: 20px;
+  height: 50%;
+  width: 50%;
+  box-sizing: border-box;
 }
 
 .tab {
@@ -15,9 +18,9 @@
 .left-tab {
   border: 10px solid #ffaa00;
   margin-right: 10px;
-  max-height: 300px; /* Add a maximum height to limit the height */
+  height: 100%; /* Add a maximum height to limit the height */
   overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
-  max-width: 200px;
+  min-width: 50%;
   overflow-y: hidden;
   box-sizing: border-box;
 }
@@ -25,15 +28,23 @@
 .right-tab {
   border: 10px solid #ffaa00;
   margin-left: 10px;
-  width:40%;
+  width: 40%;
+  height: 100%;
+  min-width: 50%;
+  box-sizing: border-box;
+}
+
+.left-tab .scrollable-content {
+  overflow-y: auto;
 }
 
 .scrollable-content {
-  max-height: 100%;
-  overflow: auto;
+  height: calc(100% - 75px);
+  overflow: hidden;
   border: 1px solid #ddd;
   padding: 10px;
-  
+  display: flex;
+  flex-direction: column;
 }
 
 .tab-header {
@@ -56,10 +67,11 @@
 }
 
 .ingredient-list {
-  max-height: 40px; /* Add a maximum height to limit the growth */
+  flex-grow: 2;
   overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
   display: flex; /* Keep the flex display for the column layout */
   flex-direction: column;
+  height: 100%;
 }
 
 .ingredient-item {
