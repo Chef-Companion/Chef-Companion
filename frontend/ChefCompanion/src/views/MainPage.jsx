@@ -20,16 +20,18 @@ function MainPage() {
   };
 
   const getRecipes = () => {
-    const filteredIngredients = ingredients.filter((ingredient) => ingredient.checked).map(x => x.name);
-    console.log(filteredIngredients)
-    axios.post('/api/recipes',
-    {
-      ingredients: filteredIngredients,
-      ingredients_mode: 'exact',
-      ingredient_mode: 'exact'
-    }) // Replace with your actual API URL
+    const filteredIngredients = ingredients
+      .filter((ingredient) => ingredient.checked)
+      .map(x => x.name);
+  
+    axios
+      .post('/api/recipes', {
+        ingredients: filteredIngredients,
+        ingredients_mode: 'any',
+        ingredient_mode: 'exact',
+      })
       .then((response) => {
-        console.log(response.data.result)
+        setRecipes(response.data.result);
       })
       .catch((error) => {
         console.error('Error fetching recipes:', error);
@@ -43,11 +45,8 @@ function MainPage() {
   };
 
   useEffect(() => {
-    // Make an HTTP GET request to your backend endpoint to fetch recipes
-    console.log('test')
-    axios.get('/api/recipes') // Replace with your actual API URL
+    axios.get('/api/recipes')
       .then((response) => {
-        console.log(response.data.result)
         setRecipes(response.data.result);
       })
       .catch((error) => {
@@ -95,7 +94,7 @@ function MainPage() {
             Remove Selected Ingredients
           </button>
           <button className="action-button" onClick={getRecipes}>
-            get
+            Generate
           </button>
         </div>
       </div>
