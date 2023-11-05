@@ -9,6 +9,7 @@ function NavBar() {
     <nav className="nav">
       <ul className="centered-nav-links"> 
         <li><Link to="/">Home</Link></li>
+        <li><Link to="/landing">Search</Link></li>
         <li><Link to="/login">Login</Link></li>
         <li
           onClick={() => {

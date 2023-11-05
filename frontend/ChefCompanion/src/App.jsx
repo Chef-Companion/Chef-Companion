@@ -4,7 +4,6 @@ import HomePage from './views/HomePage';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import './App.css';
-import { useEffect, useState } from 'react';
 import SearchPanel from './pages/landing';
 
 function App() {
@@ -22,13 +21,11 @@ function App() {
         <NavBar /> 
         <Routes>
           <Route path="/" element={<HomePage />} /> 
+          <Route path="/landing" element={<SearchPanel />} />
         </Routes>
         <Footer />
         </div>
     </Router>
-    <div>
-      <SearchPanel/>
-    </div>
   );
 }
 
