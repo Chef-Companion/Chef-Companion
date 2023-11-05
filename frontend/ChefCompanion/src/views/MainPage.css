@@ -5,7 +5,7 @@
 }
 
 .tab {
-  max-width: 200px;
+  width: 200px;
   border: 1px solid #ccc;
   padding: 20px;
   overflow: hidden;
@@ -17,7 +17,8 @@
   margin-right: 10px;
   max-height: 300px; /* Add a maximum height to limit the height */
   overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
-  width: 45%; /* Add a fixed width */
+  max-width: 200px;
+  
 }
 
 .right-tab {
@@ -31,8 +32,7 @@
   overflow: auto;
   border: 1px solid #ddd;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
+  
 }
 
 .tab-header {
