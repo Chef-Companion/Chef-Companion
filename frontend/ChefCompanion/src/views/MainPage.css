@@ -32,6 +32,11 @@
   height: 100%;
   min-width: 50%;
   box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.right-tab .scrollable-content {
+  overflow-y: auto;
 }
 
 .left-tab .scrollable-content {
@@ -72,12 +77,12 @@
   display: flex; /* Keep the flex display for the column layout */
   flex-direction: column;
   height: 100%;
+  min-height: 100px;
 }
 
 .ingredient-item {
   display: flex;
   align-items: center; /* Center checkbox and ingredient vertically */
-  
   height: 30px; /* Fixed height to ensure vertical alignment */
 }
 

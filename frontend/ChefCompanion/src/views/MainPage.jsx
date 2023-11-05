@@ -61,7 +61,7 @@ function MainPage() {
         <div className="scrollable-content">
           <ul className='recipeList'>
             {recipes.map((recipe, index) => (
-              <li key={index}>{recipe.title}</li>
+              <a key={index} href={'http://' + recipe.link} target='_blank' rel='noreferrer'>{recipe.title}</a>
             ))}
           </ul>
         </div>
