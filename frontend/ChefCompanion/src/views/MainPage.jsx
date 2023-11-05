@@ -60,7 +60,7 @@ function MainPage() {
       <div className="tab left-tab">
         <h2 className="tab-header">Recipes</h2>
         <div className="scrollable-content">
-          <ul>
+          <ul className='recipeList'>
             {recipes.map((recipe, index) => (
               <li key={index}>{recipe.title}</li>
             ))}

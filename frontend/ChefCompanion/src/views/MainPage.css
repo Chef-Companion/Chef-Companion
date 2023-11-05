@@ -18,7 +18,8 @@
   max-height: 300px; /* Add a maximum height to limit the height */
   overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
   max-width: 200px;
-  
+  overflow-y: hidden;
+  box-sizing: border-box;
 }
 
 .right-tab {
@@ -28,7 +29,7 @@
 }
 
 .scrollable-content {
-  max-height: 300px;
+  max-height: 100%;
   overflow: auto;
   border: 1px solid #ddd;
   padding: 10px;
@@ -71,4 +72,8 @@
 /* Additional styling for the checkbox and ingredient */
 input[type="checkbox"] {
   margin-right: 10px; /* Add spacing between checkbox and ingredient text */
+}
+
+.recipeList {
+  flex-direction: column;
 }
