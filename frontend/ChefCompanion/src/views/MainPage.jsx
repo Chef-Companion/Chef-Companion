@@ -6,11 +6,20 @@ function MainPage() {
   const [recipes, setRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [newIngredient, setNewIngredient] = useState('');
+  const [uniqueIngredients, setUniqueIngredients] = useState([]);
+  const [selectedIngredient, setSelectedIngredient] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleAddIngredient = () => {
-    if (newIngredient.trim() !== '') {
-      setIngredients([...ingredients, { name: newIngredient, checked: false }]);
-      setNewIngredient('');
+    if (selectedIngredient.trim() !== '') {
+      const isDuplicate = ingredients.some((ingredient) => ingredient.name === selectedIngredient);
+  
+      if (!isDuplicate) {
+        setIngredients([...ingredients, { name: selectedIngredient, checked: false }]);
+        setSelectedIngredient('');
+      } else {
+        console.log('Ingredient already exists in the list.');
+      }
     }
   };
 
@@ -44,6 +53,15 @@ function MainPage() {
     setIngredients(updatedIngredients);
   };
 
+  const filteredIngredients = uniqueIngredients.filter(ingredient =>
+    ingredient.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    setSelectedIngredient('');
+  };
+
   useEffect(() => {
     axios.get('/api/recipes')
       .then((response) => {
@@ -53,6 +71,13 @@ function MainPage() {
         console.error('Error fetching recipes:', error);
       });
   }, []); 
+
+  useEffect(() => {
+    fetch('/api/unique-ingredients/')
+        .then(response => response.json())
+        .then(data => setUniqueIngredients(data.unique_ingredients))
+        .catch(error => console.error('Error fetching data:', error));
+  }, []);
 
   return (
     <div className="main-container">
@@ -69,16 +94,30 @@ function MainPage() {
       <div className="tab right-tab">
         <h2 className="tab-header">Ingredients</h2>
         <div className="scrollable-content">
-          <input
-            type="text"
-            placeholder="Add ingredient"
-            value={newIngredient}
-            onChange={(e) => setNewIngredient(e.target.value)}
-          />
+          <div className="unique-ingredients-container">
+            <input
+              type="text"
+              placeholder="Search ingredients"
+              value={searchQuery}
+              onChange={handleSearch}
+            />
+            <ul className="unique-ingredient-list">
+              {filteredIngredients.map((ingredient, index) => (
+                <div
+                  key={index}
+                  className={`ingredient ${selectedIngredient === ingredient ? 'selected' : ''}`}
+                  onClick={() => setSelectedIngredient(ingredient)}
+                >
+                  {ingredient}
+                </div>
+              ))}
+            </ul>
+          </div>
           <button className="action-button" onClick={handleAddIngredient}>
             Add Ingredient
           </button>
           <div className="ingredient-list">
+            <h3>Ingredient List</h3>
             {ingredients.map((ingredient, index) => (
               <div className="ingredient-item" key={index}>
                 <input
@@ -86,7 +125,7 @@ function MainPage() {
                   checked={ingredient.checked}
                   onChange={() => handleToggleCheckbox(index)}
                 />
-                {ingredient.name}
+                <p className="ingredient-name">{ingredient.name}</p>
               </div>
             ))}
           </div>
