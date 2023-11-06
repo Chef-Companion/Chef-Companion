@@ -2,8 +2,8 @@
   display: flex;
   justify-content: space-between;
   margin: 20px;
-  height: 50%;
-  width: 50%;
+  height: 75%;
+  width: 60%;
   box-sizing: border-box;
 }
 
@@ -60,12 +60,12 @@
 }
 
 .action-button {
-  width: 100%; /* Match the width of the input bar */
+  width: 100%; 
   height: 50px;
   padding: 10px;
-  margin: 10px 0; /* Add spacing above and below buttons */
-  background-color: #ffaa00; /* Green background */
-  color: white; /* White text */
+  margin: 10px 0; 
+  background-color: #ffaa00; 
+  color: white; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -73,8 +73,11 @@
 
 .ingredient-list {
   flex-grow: 2;
-  overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
-  display: flex; /* Keep the flex display for the column layout */
+  column-count: 2;
+  column-gap: 10px;
+  align-items: center;
+  overflow-y: auto;
+  display: flex; 
   flex-direction: column;
   height: 100%;
   min-height: 100px;
@@ -82,15 +85,61 @@
 
 .ingredient-item {
   display: flex;
-  align-items: center; /* Center checkbox and ingredient vertically */
-  height: 30px; /* Fixed height to ensure vertical alignment */
+  align-items: center; 
+  padding: 10px; 
+  margin-bottom: 1px;
+  border: 1px solid #ccc;
 }
 
-/* Additional styling for the checkbox and ingredient */
+/* Additional styling for the checkbox */
 input[type="checkbox"] {
   margin-right: 10px; /* Add spacing between checkbox and ingredient text */
 }
 
+/* Additional styling for the ingredient text */
+.ingredient-name {
+  margin: 0; 
+}
+
+
 .recipeList {
   flex-direction: column;
+}
+
+.unique-ingredients-container {
+  display: flex;
+  flex-direction: column; /* Display ingredients vertically */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.unique-ingredient-list {
+  width: 100%;
+  max-width: 500px;
+  height: 160px;
+  overflow-y: auto; /* Enable vertical scrolling if the list exceeds the container's height */
+  display: flex;
+  flex-direction: column; /* Display ingredients vertically */
+  justify-content: flex-start;
+}
+
+.ingredient {
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.ingredient.selected {
+  background-color: #007BFF;
+  color: white;
 }
