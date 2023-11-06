@@ -1,5 +1,7 @@
 import numpy as np
 
+DEBUG = False
+
 class RecipeMatch():
     def __init__(self, recipes, ingredients=None, substitutions=None):
         # recipes: [{'recipe name': str, 'ingredients': list}]
@@ -20,7 +22,11 @@ class RecipeMatch():
 
         self.substitution_matrix = self.compute_substitution_matrix(substitutions)
 
-        print(f'finished creating RecipeMatch\nrecipes: {self.recipes}\n\ningredients: {self.ingredients}\n\nrecipe_matrix: \n{self.recipe_matrix}\n\nsubstitutions: {self.substitution_matrix}')
+        # HYPERPARAMTERS
+        self.coverage_bias = 0.1
+        self.unnecessary_ingredient_penalty = 0.01
+
+        debug(f'finished creating RecipeMatch\nrecipes: {self.recipes}\n\ningredients: {self.ingredients}\n\nrecipe_matrix: \n{self.recipe_matrix}\n\nsubstitutions: {self.substitution_matrix}')
 
 
     def get_all_ingredients(self):
@@ -76,13 +82,13 @@ class RecipeMatch():
         ''' SETUP SELECTION SPECIFIC MATRICES '''
         # create an ingredient vector where 1 = ingredient is selected, else 0
         selected_ingredients_matrix = self.compute_selected_ingredients_vector(selected_ingredients)
-        print(f"selected_ingredients_matrix: {selected_ingredients_matrix}")
+        debug(f"selected_ingredients_matrix: {selected_ingredients_matrix}")
 
         # compute substitution matrix for selected ingredients
         substitution_matrix = np.zeros((len(self.ingredients),))
         for ingredient in selected_ingredients:
             substitution_matrix = np.maximum(substitution_matrix, self.substitution_matrix[self.ingredient_ID(ingredient)])
-        print(f"substitution_matrix: {substitution_matrix}")
+        debug(f"substitution_matrix: {substitution_matrix}")
 
 
         ''' NEEDED INGREDIENTS BUT NOT SELECTED '''
@@ -92,22 +98,22 @@ class RecipeMatch():
         # consider substitution options, and multiply needed_ingredient_not_present matrix by their respective ingredient importance weights
         needed_ingredient_not_present = (needed_ingredient_not_present - substitution_matrix) * self.recipe_matrix
         needed_ingredient_not_present[needed_ingredient_not_present < 0] = 0 # because we do not care about the case where selected ingedient is not needed
-        print(f"needed_ingredient_not_present: {needed_ingredient_not_present}")
+        debug(f"needed_ingredient_not_present: {needed_ingredient_not_present}")
 
 
         ''' NOT NEEDED INGREDIENTS BUT SELECTED '''
         # create an ingredient vector where 1 = not needed ingredient is selected, else 0
         not_needed_ingredient_present = -self.boolean_recipe_matrix + selected_ingredients_matrix
         not_needed_ingredient_present[not_needed_ingredient_present < 0] = 0 # because we do not care about the case where needed ingredient is not selected
-        print(f"not_needed_ingredient_present: {not_needed_ingredient_present}")
+        debug(f"not_needed_ingredient_present: {not_needed_ingredient_present}")
 
 
         ''' UNSELECTED PERCENTAGE '''
         # percentage of ingredients from recipe that are not selected
         unselected_percentage = np.sum(needed_ingredient_not_present, axis=1) / np.sum(self.recipe_matrix, axis=1)
-        print(f"not_needed_ingredient_present: {not_needed_ingredient_present}")
+        debug(f"not_needed_ingredient_present: {not_needed_ingredient_present}")
 
-        penalty = (0.1 + unselected_percentage) * (np.sum(needed_ingredient_not_present, axis=1) * 100 + np.sum(not_needed_ingredient_present, axis=1)) # the higher the penalty, the worst the recipe is
+        penalty = (self.coverage_bias + unselected_percentage) * (np.sum(needed_ingredient_not_present, axis=1) + np.sum(not_needed_ingredient_present, axis=1) * self.unnecessary_ingredient_penalty) # the higher the penalty, the worst the recipe is
         ordering = np.argsort(penalty)
         
         # create dictionary that matches recipe to penalty number
@@ -120,6 +126,10 @@ class RecipeMatch():
     
 def make_recipe(name, ingredients):
     return {'name':name, 'ingredients':ingredients}
+
+def debug(text):
+    if DEBUG:
+        print(text)
     
 def test():
     recipes = []
