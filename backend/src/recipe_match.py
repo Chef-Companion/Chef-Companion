@@ -29,6 +29,7 @@ class RecipeMatch():
                 if ingredient in ingredients:
                     continue
                 ingredients.update({ingredient:{'id':counter}})
+                counter += 1
         return ingredients
 
     def compute_recipe_ingredient_matrix(self):
