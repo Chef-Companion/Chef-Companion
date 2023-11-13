@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './views/HomePage';
 import MainPage from './views/MainPage';
@@ -7,14 +6,6 @@ import Footer from './components/Footer';
 import './App.css';
 
 function App() {
-  const [backend, setBackend] = useState(false);
-
-  useEffect(() => {
-    fetch('/api')
-      .then((response) => response.json())
-      .then((data) => setBackend(data.working));
-  }, []);
-
 
   return (
     <Router>
@@ -25,7 +16,7 @@ function App() {
           <Route path="/main" element={<MainPage />} />
         </Routes>
         <Footer />
-        </div>
+      </div>
     </Router>
   );
 }

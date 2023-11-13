@@ -27,5 +27,5 @@ jobs:
         cache-dependency-path: ./frontend/ChefCompanion
     - run: npm install eslint && npm install eslint-plugin-react
       working-directory: ./frontend/ChefCompanion
-    - run: npx eslint . --ext .jsx
+    - run: npx eslint . --ext .jsx --max-warnings=0
       working-directory: ./frontend/ChefCompanion/src

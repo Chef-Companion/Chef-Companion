@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './NavBar.css';
 
@@ -20,7 +20,7 @@ function NavBar() {
               <ul className="dropdownUl">
                 <li><Link to="/profile">Profile</Link></li>
                 <li><Link to="/recipes">My Recipes</Link></li>
-                <li><Link to="/login" onClick={handleLogout}>Logout</Link></li>
+                <li><Link to="/login">Logout</Link></li>
               </ul>
             </div>
           ) : null}
