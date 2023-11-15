@@ -5,7 +5,7 @@ import axios from 'axios';
 function MainPage() {
   const [recipes, setRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
-  const [newIngredient, setNewIngredient] = useState('');
+  const [selected, setSelected] = useState(undefined);
   const [uniqueIngredients, setUniqueIngredients] = useState([]);
   const [selectedIngredient, setSelectedIngredient] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -81,12 +81,42 @@ function MainPage() {
 
   return (
     <div className="main-container">
+      {selected &&
+        <div className="tab left-tab recipe">
+          <h2 className="tab-header">{selected.title}</h2>
+          <div className="scrollable-content">
+            <h3>Ingredients</h3>
+            <ul className='ingredients'>
+              {selected.ingredients.map((x, i) =>
+                <li key={i}>{x}</li>
+              )}
+            </ul>
+            <h3>Directions</h3>
+            <ol className='ingredients'>
+              {selected.directions.map((x, i) =>
+                <li key={i}>&nbsp;{x}</li>
+              )}
+            </ol>
+            <br></br>
+            <a href={'http://' + selected.link} target='_blank' rel='noreferrer'>{'http://' + selected.link}</a>
+          </div>
+          <button className='action-button' onClick={() => setSelected(undefined)}>Close</button>
+        </div>
+      }
       <div className="tab left-tab">
         <h2 className="tab-header">Recipes</h2>
         <div className="scrollable-content">
           <ul className='recipeList'>
             {recipes.map((recipe, index) => (
-              <a key={index} href={'http://' + recipe.link} target='_blank' rel='noreferrer'>{recipe.title}</a>
+              <button
+                key={index}
+                onClick={() => {
+                  setSelected(recipe);
+                  console.log(recipe)
+                }}
+              >
+                {recipe.title}
+              </button>
             ))}
           </ul>
         </div>
