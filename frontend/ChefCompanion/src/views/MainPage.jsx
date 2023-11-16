@@ -5,17 +5,23 @@ import axios from 'axios';
 function MainPage() {
   const [recipes, setRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
+  const [ingredientRestrictions, setIngredientRestrictions] = useState([]);
   const [selected, setSelected] = useState(undefined);
   const [uniqueIngredients, setUniqueIngredients] = useState([]);
   const [selectedIngredient, setSelectedIngredient] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [restrictions, setRestrictions] = useState(false)
 
   const handleAddIngredient = () => {
     if (selectedIngredient.trim() !== '') {
-      const isDuplicate = ingredients.some((ingredient) => ingredient.name === selectedIngredient);
+      const isDuplicate = ingredients.concat(ingredientRestrictions).some((ingredient) => ingredient.name === selectedIngredient);
   
       if (!isDuplicate) {
-        setIngredients([...ingredients, { name: selectedIngredient, checked: false }]);
+        if (restrictions) {
+          setIngredientRestrictions([...ingredientRestrictions, { name: selectedIngredient, checked: false }]);
+        } else {
+          setIngredients([...ingredients, { name: selectedIngredient, checked: false }]);
+        }
         setSelectedIngredient('');
       } else {
         console.log('Ingredient already exists in the list.');
@@ -24,8 +30,12 @@ function MainPage() {
   };
 
   const handleRemoveIngredients = () => {
-    const filteredIngredients = ingredients.filter((ingredient) => !ingredient.checked);
-    setIngredients(filteredIngredients);
+    const filteredIngredients = (restrictions ? ingredientRestrictions : ingredients).filter((ingredient) => !ingredient.checked);
+    if (restrictions) {
+      setIngredientRestrictions(filteredIngredients);
+    } else {
+      setIngredients(filteredIngredients);
+    }
   };
 
   const getRecipes = () => {
@@ -36,6 +46,7 @@ function MainPage() {
     axios
       .post('/api/recipes', {
         ingredients: filteredIngredients,
+        restrictions: ingredientRestrictions.map(x => x.name),
         ingredients_mode: 'any',
         ingredient_mode: 'exact',
       })
@@ -48,9 +59,13 @@ function MainPage() {
   };
 
   const handleToggleCheckbox = (index) => {
-    const updatedIngredients = [...ingredients];
+    const updatedIngredients = [...(restrictions ? ingredientRestrictions : ingredients)];
     updatedIngredients[index].checked = !updatedIngredients[index].checked;
-    setIngredients(updatedIngredients);
+    if (restrictions) {
+      setIngredientRestrictions(updatedIngredients);
+    } else {
+      setIngredients(updatedIngredients);
+    }
   };
 
   const filteredIngredients = uniqueIngredients.filter(ingredient =>
@@ -146,15 +161,25 @@ function MainPage() {
           <button className="action-button" onClick={handleAddIngredient}>
             Add Ingredient
           </button>
+          {!restrictions && 
+          <button className="action-button" onClick={() => setRestrictions(true)}>
+            Switch to Dietary Restrictions List
+          </button>}
+          {restrictions &&
+          <button className="action-button" onClick={() => setRestrictions(false)}>
+            Switch to Ingredient List
+          </button>
+          }
           <div className="ingredient-list">
-            <h3>Ingredient List</h3>
-            {ingredients.map((ingredient, index) => (
+            {!restrictions && <h3> Ingredient List </h3>}
+            {restrictions && <h3> Dietary Restriction List </h3>}
+            {(restrictions ? ingredientRestrictions : ingredients).map((ingredient, index) => (
               <div className="ingredient-item" key={index}>
                 <input
                   type="checkbox"
                   checked={ingredient.checked}
                   onChange={() => handleToggleCheckbox(index)}
-                />
+                  />
                 <p className="ingredient-name">{ingredient.name}</p>
               </div>
             ))}
