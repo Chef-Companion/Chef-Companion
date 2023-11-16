@@ -36,7 +36,7 @@ function UniqueIngredients() {
                 onChange={handleSearch}
             />
             {/* List of filtered ingredients */}
-            <div className="ingredient-list">
+            <div className="unique-ingredient-list">
                 {filteredIngredients.map((ingredient, index) => (
                     <div
                         key={index}

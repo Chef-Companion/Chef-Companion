@@ -1,11 +1,16 @@
 .main-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: center;
   margin: 20px;
+  margin-top: 5rem;
+  height: calc(100% - 230px);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .tab {
-  width: 200%;
+  width: 200px;
   border: 1px solid #ccc;
   padding: 20px;
   overflow: hidden;
@@ -15,18 +20,37 @@
 .left-tab {
   border: 10px solid #ffaa00;
   margin-right: 10px;
+  height: 100%; /* Add a maximum height to limit the height */
+  overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
+  min-width: 30%;
+  overflow-y: hidden;
+  box-sizing: border-box;
 }
 
 .right-tab {
   border: 10px solid #ffaa00;
-  margin-left: 500px;
+  margin-left: 10px;
+  height: 100%;
+  min-width: 30%;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.right-tab .scrollable-content {
+  overflow-y: auto;
+}
+
+.left-tab .scrollable-content {
+  overflow-y: auto;
 }
 
 .scrollable-content {
-  max-height: 300px;
-  overflow: auto;
+  height: calc(100% - 75px);
+  overflow: hidden;
   border: 1px solid #ddd;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .tab-header {
@@ -37,32 +61,145 @@
 }
 
 .action-button {
-  width: 100%; /* Match the width of the input bar */
+  width: 100%; 
   height: 50px;
   padding: 10px;
-  margin: 10px 0; /* Add spacing above and below buttons */
-  background-color: #ffaa00; /* Green background */
-  color: white; /* White text */
+  margin: 10px 0;
+  background-color: #ffaa00; 
+  color: white; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
+.action-button:hover {
+  background-color: color-mix(in srgb, #ffaa00 100%, black 10%);
+}
+
 .ingredient-list {
-  max-height: 100px; /* Add a maximum height to limit the growth */
-  overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
-  display: flex; /* Keep the flex display for the column layout */
+  flex-grow: 2;
+  column-count: 2;
+  column-gap: 10px;
+  align-items: center;
+  overflow-y: auto;
+  display: flex; 
   flex-direction: column;
+  height: 100%;
+  min-height: 100px;
+  box-sizing: border-box;
 }
 
 .ingredient-item {
   display: flex;
-  align-items: center; /* Center checkbox and ingredient vertically */
-  
-  height: 30px; /* Fixed height to ensure vertical alignment */
+  align-items: center; 
+  padding: 10px; 
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Additional styling for the checkbox and ingredient */
+.ingredient-item input {
+  cursor: pointer;
+}
+
+.ingredient-item p {
+  width: 100%;
+}
+
+/* Additional styling for the checkbox */
 input[type="checkbox"] {
   margin-right: 10px; /* Add spacing between checkbox and ingredient text */
+}
+
+/* Additional styling for the ingredient text */
+.ingredient-name {
+  margin: 0; 
+}
+
+.recipeList {
+  flex-direction: column;
+}
+
+.recipeList button {
+  cursor: pointer;
+  border: none;
+  font-size: inherit;
+  padding: 10px;
+}
+
+.recipeList button:hover {
+  background-color: #007BFF;
+  color: white;
+}
+
+.unique-ingredients-container {
+  display: flex;
+  flex-direction: column; /* Display ingredients vertically */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.unique-ingredients-container input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.unique-ingredient-list {
+  width: 100%;
+  max-width: 500px;
+  height: 160px;
+  overflow-y: auto; /* Enable vertical scrolling if the list exceeds the container's height */
+  display: flex;
+  flex-direction: column; /* Display ingredients vertically */
+  justify-content: flex-start;
+}
+
+.ingredient {
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.ingredient:hover {
+  background-color: lightgray;
+}
+
+.ingredient.selected {
+  background-color: #007BFF;
+  color: white;
+}
+
+ul.ingredients, ol {
+  list-style-type: unset;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  margin: 0;
+  width: 100%;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+.recipe {
+  text-align: left;
+}
+
+.recipe li {
+  padding: 5px;
+}
+
+.recipe .action-button {
+  height: unset;
+}
+
+.recipe .scrollable-content {
+  height: calc(100% - 116px);
 }
