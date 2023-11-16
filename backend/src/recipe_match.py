@@ -144,7 +144,7 @@ def test():
     recipes.append(make_recipe("Tomato Basil Soup", ["tomatoes", "chicken stock", "basil", "onion", "carrot", "celery", "cream"]))
     recipes.append(make_recipe("Lemon Garlic Tilapia", ["tilapia fillets", "lemon juice", "garlic", "butter", "parsley"]))
 
-    selected_ingredients = ['eggs', 'flour', 'bread', 'salt', 'pepper', 'butter', "spaghetti", "olive oil", "garlic", "red pepper flakes"]
+    selected_ingredients = ["banana", "mixed berries", "yogurt", "honey"]
     matcher = RecipeMatch(recipes)
     penalty_data, ordering = matcher.match(selected_ingredients)
 
@@ -153,7 +153,7 @@ def test():
     print(f"ordered recipes: {ordered_recipes}")
     print(f"penalty data: {penalty_data}")
 
-    good_matches = [recipe_name for recipe_name, penalty in penalty_data.items() if penalty < 100]
+    good_matches = [recipe_name for recipe_name, penalty in penalty_data.items() if penalty < 1]
     print(f'good matches: {good_matches}')
     
 if __name__ == "__main__":
