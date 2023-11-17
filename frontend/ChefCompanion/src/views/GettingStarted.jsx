@@ -8,7 +8,7 @@ function GettingStartedModal({ isOpen, onRequestClose }) {
     // Define custom styles for the modal
     const modalStyles = {
         content: {
-            maxWidth: '400px', 
+            maxWidth: '600px', 
             maxHeight: '300px', 
             margin: 'auto',    
             textAlign: 'center',
@@ -23,10 +23,18 @@ function GettingStartedModal({ isOpen, onRequestClose }) {
             contentLabel="Getting Started Modal"
             style={modalStyles}              
         >
-            <h2>Getting Started</h2>  
-            Test
+            <h2>Getting Started</h2>
             <p>
                 Welcome to Chef Companion! Generate recipes based on what you have from your pantry and kitchen.
+            </p>
+            <p>
+                Add ingredients from the search bar to your list, and click the checkbox for them to be selected in your recipe search.
+            </p>
+            <p>
+                When you are ready to search for recipes, click the "Generate Recipes" button to view the list of recipes which contain the ingredients you have checked off.
+            </p>
+            <p>
+                To view a recipe, click on it to open a side panel displaying the ingredients and instructions.
             </p>
             <button onClick={onRequestClose}>Close</button> 
         </Modal>
