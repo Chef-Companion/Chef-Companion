@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import './NavBar.css';
 
+// NavBar component
 function NavBar() {
   // const [showDropdown, setShowDropdown] = useState(false);
 
   return (
+    // Navigation bar container
     <nav className="nav">
-      <ul className="centered-nav-links"> 
+      {/* Centered navigation links */}
+      <ul className="centered-nav-links">
+        {/* Home link */}
         <li><Link to="/">Home</Link></li>
         {/*   LOGIN FEATURE - POTENTIAL FUTURE USE
         
