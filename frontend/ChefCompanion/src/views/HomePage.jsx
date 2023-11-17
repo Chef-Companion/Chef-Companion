@@ -16,6 +16,7 @@ function HomePage() {
 
     return (
         <div className="container">
+            <img src={'/sdad.png'} width={372} height={298}/>
             <h1 className="title">Welcome to Chef Companion, your personal recipe generator!</h1>
             <p className="description">Generate recipes based on what you have from your pantry and kitchen!</p>
             <Link to="/main">
