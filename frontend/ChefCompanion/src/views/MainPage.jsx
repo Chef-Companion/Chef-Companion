@@ -5,6 +5,7 @@ import axios from 'axios';
 function MainPage() {
   const [recipes, setRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
+  const [showMissing, setShowMissing] = useState(false)
   const [ingredientRestrictions, setIngredientRestrictions] = useState([]);
   const [selected, setSelected] = useState(undefined);
   const [uniqueIngredients, setUniqueIngredients] = useState([]);
@@ -106,6 +107,15 @@ function MainPage() {
                 <li key={i}>{x}</li>
               )}
             </ul>
+            <button className='action-button' onClick={() => setShowMissing(!showMissing)}> {showMissing ? "Hide" : "Show"} Missing Ingredients</button>
+            {showMissing && 
+              <h3>Missing Ingredients</h3> &&
+              <ul className='ingredients'>
+                {selected.NER.filter((ingredient) => !ingredients.map((i) => i.name).includes(ingredient)).map((x, i) =>
+                  <li key={i}>{x}</li>
+                )}
+              </ul>
+            }
             <h3>Directions</h3>
             <ol className='ingredients'>
               {selected.directions.map((x, i) =>
