@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 Modal.setAppElement('#root');
 
 function GettingStartedModal({ isOpen, onRequestClose }) {
-    // Define custom styles for the modal
+    // Define custom styles
     const modalStyles = {
         content: {
             maxWidth: '600px', 
@@ -16,7 +16,7 @@ function GettingStartedModal({ isOpen, onRequestClose }) {
     };
 
     return (
-        // Create the modal component
+        // Create the popout window
         <Modal
             isOpen={isOpen}                 
             onRequestClose={onRequestClose} 
@@ -25,7 +25,7 @@ function GettingStartedModal({ isOpen, onRequestClose }) {
         >
             <h2>Getting Started</h2>
             <p>
-                Welcome to Chef Companion! Generate recipes based on what you have from your pantry and kitchen.
+                Welcome to Chef Companion! Generate recipes based on what you have from your pantry and kitchen. 
             </p>
             <p>
                 Add ingredients from the search bar to your list, and click the checkbox for them to be selected in your recipe search.
