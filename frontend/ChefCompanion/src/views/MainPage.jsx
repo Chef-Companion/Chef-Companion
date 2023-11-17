@@ -3,6 +3,7 @@ import './MainPage.css';
 import axios from 'axios';
 
 function MainPage() {
+  //state variables
   const [recipes, setRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [showMissing, setShowMissing] = useState(false)
@@ -13,11 +14,14 @@ function MainPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [restrictions, setRestrictions] = useState(false)
 
+  //function to add ingredients to list
   const handleAddIngredient = () => {
     if (selectedIngredient.trim() !== '') {
+      //check for duplicates
       const isDuplicate = ingredients.concat(ingredientRestrictions).some((ingredient) => ingredient.name === selectedIngredient);
   
       if (!isDuplicate) {
+        //add ingredients to proper list
         if (restrictions) {
           setIngredientRestrictions([...ingredientRestrictions, { name: selectedIngredient, checked: false }]);
         } else {
@@ -30,6 +34,7 @@ function MainPage() {
     }
   };
 
+  //function to remove selected ingredients
   const handleRemoveIngredients = () => {
     const filteredIngredients = (restrictions ? ingredientRestrictions : ingredients).filter((ingredient) => !ingredient.checked);
     if (restrictions) {
@@ -39,6 +44,7 @@ function MainPage() {
     }
   };
 
+  //function to fetch recipes on selected ingredients
   const getRecipes = () => {
     const filteredIngredients = ingredients
       .filter((ingredient) => ingredient.checked)
@@ -59,6 +65,7 @@ function MainPage() {
       });
   };
 
+  //function to toggle checkbox
   const handleToggleCheckbox = (index) => {
     const updatedIngredients = [...(restrictions ? ingredientRestrictions : ingredients)];
     updatedIngredients[index].checked = !updatedIngredients[index].checked;
@@ -69,15 +76,18 @@ function MainPage() {
     }
   };
 
+  //filter unique ingredients
   const filteredIngredients = uniqueIngredients.filter(ingredient =>
     ingredient.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  //function to handle changes within the search bar
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     setSelectedIngredient('');
   };
 
+  //fetches recipes component
   useEffect(() => {
     axios.get('/api/recipes')
       .then((response) => {
@@ -88,6 +98,7 @@ function MainPage() {
       });
   }, []); 
 
+  //fetches unique ingredients component
   useEffect(() => {
     fetch('/api/unique-ingredients/')
         .then(response => response.json())
@@ -97,6 +108,7 @@ function MainPage() {
 
   return (
     <div className="main-container">
+      {/* Selected recipe display */}      
       {selected &&
         <div className="tab left-tab recipe">
           <h2 className="tab-header">{selected.title}</h2>
@@ -128,6 +140,7 @@ function MainPage() {
           <button className='action-button' onClick={() => setSelected(undefined)}>Close</button>
         </div>
       }
+      {/* Left tab for displaying recipes */}      
       <div className="tab left-tab">
         <h2 className="tab-header">Recipes</h2>
         <div className="scrollable-content">
@@ -146,16 +159,19 @@ function MainPage() {
           </ul>
         </div>
       </div>
+      {/* Right tab for managing ingredients and restrictions */}
       <div className="tab right-tab">
         <h2 className="tab-header">Ingredients</h2>
         <div className="scrollable-content">
           <div className="unique-ingredients-container">
+          {/* Search input for filtering unique ingredients */}
             <input
               type="text"
               placeholder="Search ingredients"
               value={searchQuery}
               onChange={handleSearch}
             />
+            {/* List of unique ingredients */}
             <ul className="unique-ingredient-list">
               {filteredIngredients.map((ingredient, index) => (
                 <div
@@ -168,10 +184,12 @@ function MainPage() {
               ))}
             </ul>
           </div>
+          {/* Button to add selected ingredient to the list */}
           <button className="action-button" onClick={handleAddIngredient}>
             Add Ingredient
           </button>
-          {!restrictions && 
+          {/* Button to switch between Ingredient List and Dietary Restriction List */}
+          {!restrictions &&           
           <button className="action-button" onClick={() => setRestrictions(true)}>
             Switch to Dietary Restrictions List
           </button>}
@@ -180,6 +198,7 @@ function MainPage() {
             Switch to Ingredient List
           </button>
           }
+          {/* List of ingredients or restrictions */}
           <div className="ingredient-list">
             {!restrictions && <h3> Ingredient List </h3>}
             {restrictions && <h3> Dietary Restriction List </h3>}
@@ -194,6 +213,7 @@ function MainPage() {
               </div>
             ))}
           </div>
+          {/* Buttons for removing selected ingredients and generating recipes */}
           <button className="action-button" onClick={handleRemoveIngredients}>
             Remove Selected Ingredients
           </button>

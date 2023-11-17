@@ -1,7 +1,7 @@
 .nav {
   background: #333;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 10px;
   position: fixed;
@@ -13,7 +13,7 @@
 ul {
   list-style-type: none;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   padding: 0;
   margin: 0;
   width: 100%;
@@ -33,27 +33,4 @@ li {
 
 a:hover {
   color: #007BFF;
-}
-
-.dropdownDiv {
-  background: white;
-  position: absolute;
-  border: 1px solid #333;
-  border-radius: 3px;
-}
-
-.dropdownUl {
-  list-style-type: none;
-  padding: 10px;
-  margin: 0;
-}
-
-.dropdownLi {
-  margin-bottom: 10px;
-}
-
-.dropdownA {
-  text-decoration: none;
-  color: #333;
-  font-size: 15px;
 }
