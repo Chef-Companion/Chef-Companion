@@ -1,9 +1,10 @@
 import numpy as np
+from scorer import Scorer
 
 DEBUG = True
 
 class RecipeMatch():
-    def __init__(self, recipes, ingredients=None, substitutions=None):
+    def __init__(self, recipes, substitutions=None):
         # recipes: [{'recipe name': str, 'ingredients': list}]
         # ingredients: {ingredient name: {'id': int}}
         # substitutions: {ingredient name: {substitution ingredient name: relevance score}}
@@ -11,16 +12,13 @@ class RecipeMatch():
         # id must be unique and continuous, starting from 0
         # ingredient names within recipes must match to an ingredient within ingredients, pass none as ingredients to auto-generate
         self.recipes = recipes
-        self.ingredients = ingredients
-
-        if ingredients is None:
-            self.ingredients = self.get_all_ingredients()
+        self.ingredients, self.ingredients_vector = self.get_all_ingredients()
 
         self.recipe_matrix = self.compute_recipe_ingredient_matrix()
         self.boolean_recipe_matrix = self.recipe_matrix.copy()
         self.boolean_recipe_matrix[self.boolean_recipe_matrix > 0] = 1
 
-        self.substitution_matrix = self.compute_substitution_matrix(substitutions)
+        self.substitution_matrix = self.compute_substitution_matrix() - np.identity(len(self.ingredients_vector))
 
         # HYPERPARAMTERS
         self.coverage_bias = 0.1
@@ -31,14 +29,16 @@ class RecipeMatch():
 
     def get_all_ingredients(self):
         ingredients = {}
+        ingredients_vector = []
         counter = 0
         for recipe in self.recipes:
             for ingredient in recipe['ingredients']:
                 if ingredient in ingredients:
                     continue
                 ingredients.update({ingredient:{'id':counter}})
+                ingredients_vector.append(ingredient)
                 counter += 1
-        return ingredients
+        return ingredients, ingredients_vector
 
     def compute_recipe_ingredient_matrix(self):
         matrix = np.zeros((len(self.recipes), len(self.ingredients)))
@@ -49,7 +49,7 @@ class RecipeMatch():
                 weight *= 0.95
         return matrix
     
-    def compute_substitution_matrix(self, substitutions):
+    def get_substitution_matrix(self, substitutions):
         matrix = np.zeros((len(self.ingredients), len(self.ingredients)))
         if substitutions is None:
             return matrix
@@ -58,6 +58,21 @@ class RecipeMatch():
             for substitution, score in ingredient_substitutions.items():
                 matrix[self.ingredient_ID(ingredient)][self.ingredient_ID(substitution)] = score
         return matrix
+    
+    def get_substitutable(self, selected_ingredients):
+        selected_ingredient_indices = []
+        for ingredient in selected_ingredients:
+            selected_ingredient_indices.append(self.ingredient_ID(ingredient))
+        print(f'selected indices = {selected_ingredient_indices}')
+        selected_ingredient_indices = np.array(selected_ingredient_indices)
+        substitutable = np.argmax(self.substitution_matrix[selected_ingredient_indices], axis=1)
+        print(f'substitutable: {substitutable} {substitutable.shape}')
+        return substitutable
+
+    
+    def compute_substitution_matrix(self):
+        scorer = Scorer(self.ingredients_vector)
+        return scorer.build_relevenace_matrix()
     
     def ingredient_ID(self, ingredient):
         return self.ingredients[ingredient]['id']
@@ -70,7 +85,7 @@ class RecipeMatch():
         return matrix
 
 
-    def match(self, selected_ingredients, forbidden_ingredients=None, filters:dict=None):
+    def match(self, selected_ingredients, forbidden_ingredients=None, substitutions=False, filters:dict=None):
         '''
         TODO:
         - normalize names (eg tomato vs tomatoes)
@@ -83,7 +98,8 @@ class RecipeMatch():
         # create an ingredient vector where 1 = ingredient is selected, else 0
         selected_ingredients_matrix = self.compute_selected_ingredients_vector(selected_ingredients)
         if forbidden_ingredients is not None:
-            forbidden_ingredients_matrix = self.compute_selected_ingredients_vector(forbidden_ingredients) * -1e12
+            forbidden_ingredients_matrix = self.compute_selected_ingredients_vector(forbidden_ingredients)
+            forbidden_ingredients_matrix = np.where(forbidden_ingredients_matrix < 0.5, forbidden_ingredients_matrix, -1e12)
             selected_ingredients_matrix += forbidden_ingredients_matrix
         debug(f"selected_ingredients_matrix: {selected_ingredients_matrix}")
 
@@ -91,15 +107,19 @@ class RecipeMatch():
         substitution_matrix = np.zeros((len(self.ingredients),))
         for ingredient in selected_ingredients:
             substitution_matrix = np.maximum(substitution_matrix, self.substitution_matrix[self.ingredient_ID(ingredient)])
+        substitution_matrix = substitution_matrix * (1 - selected_ingredients_matrix)
         debug(f"substitution_matrix: {substitution_matrix}")
-
+        
 
         ''' NEEDED INGREDIENTS BUT NOT SELECTED '''
         # create an ingredient vector where 1 = needed ingredient is not selected, else 0
         needed_ingredient_not_present = self.boolean_recipe_matrix - selected_ingredients_matrix
 
         # consider substitution options, and multiply needed_ingredient_not_present matrix by their respective ingredient importance weights
-        needed_ingredient_not_present = (needed_ingredient_not_present - substitution_matrix) * self.recipe_matrix
+        if substitutions:
+            needed_ingredient_not_present = (needed_ingredient_not_present - substitution_matrix) * self.recipe_matrix
+        else:
+            needed_ingredient_not_present = (needed_ingredient_not_present) * self.recipe_matrix
         needed_ingredient_not_present[needed_ingredient_not_present < 0] = 0 # because we do not care about the case where selected ingedient is not needed
         debug(f"needed_ingredient_not_present: {needed_ingredient_not_present}")
 
@@ -135,6 +155,7 @@ def debug(text):
         print(text)
     
 def test():
+    np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
     recipes = []
     recipes.append(make_recipe("Sunny Side Up Delight", ["eggs", "salt", "pepper", "butter"]))
     recipes.append(make_recipe("Banana Berry Smoothie", ["banana", "mixed berries", "yogurt", "honey", "ice"]))
@@ -148,9 +169,9 @@ def test():
     recipes.append(make_recipe("Lemon Garlic Tilapia", ["tilapia fillets", "lemon juice", "garlic", "butter", "parsley"]))
 
     selected_ingredients = ["banana", "mixed berries", "yogurt", "honey"]
-    forbidden_ingredients = ["eggs", "salt", "ice"]
+    forbidden_ingredients = ["salt"]
     matcher = RecipeMatch(recipes)
-    penalty_data, ordering = matcher.match(selected_ingredients, forbidden_ingredients)
+    penalty_data, ordering = matcher.match(selected_ingredients, forbidden_ingredients, True)
 
     all_recipes = [recipe["name"] for recipe in recipes]
     ordered_recipes = np.take(all_recipes, ordering)
