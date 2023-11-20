@@ -5,8 +5,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="links">
-        <a href="/about" className="link">About</a>
-        <a href="/contact" className="link">Contact</a>
+        <a href="https://github.com/Chef-Companion/Chef-Companion" className="link">Repository</a>
       </div>
       <p className="copyright">© 2023 Chef Companion. All rights reserved.</p>
     </footer>

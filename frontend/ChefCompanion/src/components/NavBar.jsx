@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom';
 import './NavBar.css';
 
 function NavBar() {
-  const [showDropdown, setShowDropdown] = useState(false);
+  // const [showDropdown, setShowDropdown] = useState(false);
 
   return (
     <nav className="nav">
       <ul className="centered-nav-links"> 
         <li><Link to="/">Home</Link></li>
         <li><Link to="/landing">Search</Link></li>
+        {/*   LOGIN FEATURE - POTENTIAL FUTURE USE
+        
         <li><Link to="/login">Login</Link></li>
         <li
           onClick={() => {
@@ -25,7 +27,7 @@ function NavBar() {
               </ul>
             </div>
           ) : null}
-        </li>
+        </li> */}
       </ul>
     </nav>
   );

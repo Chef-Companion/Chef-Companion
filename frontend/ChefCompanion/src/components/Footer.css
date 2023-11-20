@@ -1,36 +1,36 @@
 .page-grid {
-    display: grid;
-    grid-template-rows: 1fr auto; 
+  display: grid;
+  grid-template-rows: 1fr auto; 
 }
-  
+
 .footer {
-    background-color: #333;
-    padding: 20px 0;
-    text-align: center;
-    width: 100%;
-    position: fixed; 
-    bottom: 0;
-    left: 0;
-    right: 0; 
+  background-color: #333;
+  padding: 20px 0;
+  text-align: center;
+  width: 100%;
+  position: fixed; 
+  bottom: 0;
+  left: 0;
+  right: 0; 
 }
-  
+
 .links {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
 }
-  
+
 .link {
-    margin: 0 15px;
-    text-decoration: none;
-    color: #ffffff;
+  margin: 0 15px;
+  text-decoration: none;
+  color: #ffffff;
 }
-  
+
 .copyright {
-    font-size: 0.9em;
-    color: #7e7a7a;
+  font-size: 0.9em;
+  color: #7e7a7a;
 }
 
 .spacer {
-    height: 100px;
+  height: 100px;
 }
