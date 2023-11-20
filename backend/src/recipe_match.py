@@ -1,6 +1,6 @@
 import numpy as np
 
-DEBUG = False
+DEBUG = True
 
 class RecipeMatch():
     def __init__(self, recipes, ingredients=None, substitutions=None):
@@ -70,7 +70,7 @@ class RecipeMatch():
         return matrix
 
 
-    def match(self, selected_ingredients, filters:dict=None):
+    def match(self, selected_ingredients, forbidden_ingredients=None, filters:dict=None):
         '''
         TODO:
         - normalize names (eg tomato vs tomatoes)
@@ -82,6 +82,9 @@ class RecipeMatch():
         ''' SETUP SELECTION SPECIFIC MATRICES '''
         # create an ingredient vector where 1 = ingredient is selected, else 0
         selected_ingredients_matrix = self.compute_selected_ingredients_vector(selected_ingredients)
+        if forbidden_ingredients is not None:
+            forbidden_ingredients_matrix = self.compute_selected_ingredients_vector(forbidden_ingredients) * -1e12
+            selected_ingredients_matrix += forbidden_ingredients_matrix
         debug(f"selected_ingredients_matrix: {selected_ingredients_matrix}")
 
         # compute substitution matrix for selected ingredients
@@ -145,8 +148,9 @@ def test():
     recipes.append(make_recipe("Lemon Garlic Tilapia", ["tilapia fillets", "lemon juice", "garlic", "butter", "parsley"]))
 
     selected_ingredients = ["banana", "mixed berries", "yogurt", "honey"]
+    forbidden_ingredients = ["eggs", "salt", "ice"]
     matcher = RecipeMatch(recipes)
-    penalty_data, ordering = matcher.match(selected_ingredients)
+    penalty_data, ordering = matcher.match(selected_ingredients, forbidden_ingredients)
 
     all_recipes = [recipe["name"] for recipe in recipes]
     ordered_recipes = np.take(all_recipes, ordering)
