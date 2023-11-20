@@ -1,6 +1,5 @@
 import numpy as np
-from cache import *
-from embed import Sentence_Embedder
+from .embed import Sentence_Embedder
 
 class Scorer():
 
@@ -32,10 +31,16 @@ class Scorer():
     def get_embedding(self, sentences):
         return self.embedder.embed(sentences).numpy()
     
-    def build_relevenace_matrix(self):
+    def build_relevenace_matrix(self, discretized=True):
         matrix = np.zeros((len(self.elements), len(self.elements)))
         for i, e in enumerate(self.elements):
-            matrix[i] = self.get_element_relevance(f"{e} and")
+            entry = self.get_element_relevance(f"{e} and")
+            entry[i] = 0
+            if not discretized:
+                continue
+            threshold = 0.2
+            entry = np.where(entry < threshold, 0, 1)
+            matrix[i] = entry
         print(f'matrix: {matrix}')
         return matrix
     

@@ -11,7 +11,9 @@ function MainPage() {
   const [uniqueIngredients, setUniqueIngredients] = useState([]);
   const [selectedIngredient, setSelectedIngredient] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [restrictions, setRestrictions] = useState(false)
+  const [restrictions, setRestrictions] = useState(false);
+  const [substitutionEnable, setSubstitutionEnable] = useState(true);
+  const [ingredientColorful, setIngredientColorful] = useState('blankColor');
 
   const handleAddIngredient = () => {
     if (selectedIngredient.trim() !== '') {
@@ -39,6 +41,25 @@ function MainPage() {
     }
   };
 
+  const getRecipesRanked = () => {
+    const filteredIngredients = ingredients
+      .filter((ingredient) => ingredient.checked)
+      .map(x => x.name);
+
+    axios
+      .post('/api/recipes_ranked', {
+        selected_ingredients: filteredIngredients,
+        forbidden_ingredients: ingredientRestrictions.map(x => x.name),
+        enable_substitutions: substitutionEnable
+      })
+      .then((response) => {
+        setRecipes(response.data.result);
+      })
+      .catch((error) => {
+        console.error("error getting ranked recipes ", error);
+      })
+  };
+/*
   const getRecipes = () => {
     const filteredIngredients = ingredients
       .filter((ingredient) => ingredient.checked)
@@ -57,6 +78,11 @@ function MainPage() {
       .catch((error) => {
         console.error('Error fetching recipes:', error);
       });
+  };*/
+
+  const toggleSubstitutions = () => {
+    setSubstitutionEnable(!substitutionEnable);
+    console.log(`substition: ${substitutionEnable}`)
   };
 
   const handleToggleCheckbox = (index) => {
@@ -133,15 +159,19 @@ function MainPage() {
         <div className="scrollable-content">
           <ul className='recipeList'>
             {recipes.map((recipe, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setSelected(recipe);
-                  console.log(recipe)
-                }}
-              >
-                {recipe.title}
-              </button>
+              <span className={recipe.score < 10 ? 'color-c1' : 'color-c6'}>
+                <button
+                  className='button-recipe'
+                  key={index}
+                  onClick={() => {
+                    setSelected(recipe);
+                    console.log(recipe)
+                  }}
+                >
+                  {recipe.title} <br></br>
+                  {recipe.score !== undefined && parseInt(recipe.score * 10)}
+                </button>
+              </span>
             ))}
           </ul>
         </div>
@@ -171,6 +201,9 @@ function MainPage() {
           <button className="action-button" onClick={handleAddIngredient}>
             Add Ingredient
           </button>
+          <button className="action-button" onClick={toggleSubstitutions}>
+            substitutions: {substitutionEnable ? 'True' : 'False'}
+          </button>
           {!restrictions && 
           <button className="action-button" onClick={() => setRestrictions(true)}>
             Switch to Dietary Restrictions List
@@ -197,7 +230,7 @@ function MainPage() {
           <button className="action-button" onClick={handleRemoveIngredients}>
             Remove Selected Ingredients
           </button>
-          <button className="action-button" onClick={getRecipes}>
+          <button className="action-button" onClick={getRecipesRanked}>
             Generate
           </button>
         </div>

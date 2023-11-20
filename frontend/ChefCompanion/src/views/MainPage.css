@@ -76,6 +76,10 @@
   background-color: color-mix(in srgb, #ffaa00 100%, black 10%);
 }
 
+.button-recipe {
+  background-color: transparent;
+}
+
 .ingredient-list {
   flex-grow: 2;
   column-count: 2;
@@ -96,6 +100,14 @@
   border: none;
   width: 100%;
   box-sizing: border-box;
+}
+
+.color-c1 {
+  background-color: hsla(70, 20%, 50%, 0.532);
+}
+
+.color-c6 {
+  background-color: hsla(140, 20%, 50%, 0.532);
 }
 
 .ingredient-item input {
@@ -167,7 +179,7 @@ input[type="checkbox"] {
 }
 
 .ingredient:hover {
-  background-color: lightgray;
+  background-color: hsla(0,0%,0%,0);
 }
 
 .ingredient.selected {
