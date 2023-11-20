@@ -103,11 +103,21 @@
 }
 
 .color-c1 {
-  background-color: hsla(70, 20%, 50%, 0.532);
+  background-color: hsla(40, 28%, 66%, 0.432);
+}
+
+.color-c2 {
+  background-color: hsla(69, 21%, 65%, 0.432);
+}
+.color-c3 {
+  background-color: hsla(78, 20%, 50%, 0.452);
+}
+.color-c4 {
+  background-color: hsla(119, 20%, 50%, 0.482);
 }
 
 .color-c6 {
-  background-color: hsla(140, 20%, 50%, 0.532);
+  background-color: hsla(140, 32%, 48%, 0.592);
 }
 
 .ingredient-item input {

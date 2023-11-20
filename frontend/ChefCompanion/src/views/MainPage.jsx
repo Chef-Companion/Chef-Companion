@@ -104,6 +104,24 @@ function MainPage() {
     setSelectedIngredient('');
   };
 
+  const getColorClass = (score) => {
+    if (score < 2) {
+      return 'color-c1';
+    }
+    else if (score < 5) {
+      return 'color-c2';
+    }
+    else if (score < 8) {
+      return 'color-c3';
+    }
+    else if (score < 10) {
+      return 'color-c4';
+    }
+    else {
+      return 'color-c6';
+    }
+  }
+
   useEffect(() => {
     axios.get('/api/recipes')
       .then((response) => {
@@ -159,7 +177,7 @@ function MainPage() {
         <div className="scrollable-content">
           <ul className='recipeList'>
             {recipes.map((recipe, index) => (
-              <span className={recipe.score < 10 ? 'color-c1' : 'color-c6'}>
+              <span className={getColorClass(recipe.score)}>
                 <button
                   className='button-recipe'
                   key={index}
