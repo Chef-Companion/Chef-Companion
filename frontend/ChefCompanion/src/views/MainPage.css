@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin: 20px;
+  margin: 5px;
   margin-top: 5rem;
   height: calc(100% - 230px);
   width: 100%;
@@ -12,13 +12,13 @@
 .tab {
   width: 200px;
   border: 1px solid #ccc;
-  padding: 20px;
+  padding: 10px;
   overflow: hidden;
   text-align: center; /* Center the tab headers */
 }
 
 .left-tab {
-  border: 10px solid #ffaa00;
+  border: 8px solid #ffaa00;
   margin-right: 10px;
   height: 100%; /* Add a maximum height to limit the height */
   overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
@@ -28,7 +28,7 @@
 }
 
 .right-tab {
-  border: 10px solid #ffaa00;
+  border: 8px solid #ffaa00;
   margin-left: 10px;
   height: 100%;
   min-width: 30%;
@@ -102,6 +102,15 @@
   box-sizing: border-box;
 }
 
+.color-null {
+  background-color: #e9e3e3;
+}
+
+.color-c0 {
+  background-color: hsla(0, 28%, 66%, 0.432);
+  text-decoration: line-through;
+}
+
 .color-c1 {
   background-color: hsla(40, 28%, 66%, 0.432);
 }
@@ -118,6 +127,14 @@
 
 .color-c6 {
   background-color: hsla(140, 32%, 48%, 0.592);
+}
+
+.good-match {
+  color:#252928;
+}
+
+.bold {
+  font-weight: 650;
 }
 
 .ingredient-item input {
@@ -183,10 +200,11 @@ input[type="checkbox"] {
 }
 
 .ingredient {
-  padding: 3px;
+  padding: 1px;
   border-radius: 4px;
   border: none;
   cursor: pointer;
+  display: flex;
 }
 
 .ingredient:hover {
@@ -194,8 +212,99 @@ input[type="checkbox"] {
 }
 
 .ingredient.selected {
-  background-color: rgb(153, 162, 174);
-  color: white;
+  background-color: rgba(181, 210, 181, 0.7);
+  font-weight: 600;
+}
+
+.ingredient.selected2 {
+  background-color: rgb(227, 228, 212);
+  font-weight: 650;
+}
+
+.ingredient.forbidden {
+  background-color: rgba(205, 176, 169, 0.7);
+  font-weight: 600;
+}
+
+.ingredient.forbidden2 {
+  background-color: rgb(227, 228, 212);
+  font-weight: 650;
+}
+
+.checkmark-span {
+  width: 20px;
+}
+
+.ingredient-entry-name {
+  width: 90%;
+  justify-self: left;
+  padding: 3px;
+}
+
+.ingredient-entry-restrict {
+  justify-self: right;
+}
+
+.ingredient-search {
+  font-size: 18px;
+  border-radius: 4px;
+  padding: 2px;
+  margin: 8px;
+  width: 90%;
+}
+
+.tab.right-tab.top {
+  width: 100%;
+  height: 60%;
+  padding: 0px;
+  margin: 1px;
+  border: none;
+}
+
+.tab.right-tab.top.scroll {
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  border: none;
+}
+
+.tab.right-tab.bottom {
+  width: 100%;
+  height: 30%;
+  padding: 0px;
+  margin: 0px;
+  border: none;
+}
+
+.button-selected-mode {
+  background-color:rgb(207, 207, 207);
+  font-size: 16px;
+  border-radius: 2px;
+  border: 1px solid rgba(100,100,100,0.5);
+  padding: 4px;
+  margin: 4px;
+}
+
+.button-selected-mode.selected {
+  background-color:rgb(251, 255, 245);
+  border: 1px solid rgba(100, 120, 100, 0.5);
+  font-weight: 650;
+}
+
+.toggle-substitution {
+  font-size: 20px;
+  padding: 8px;
+  margin: 4px;
+  border-radius: 2px;
+  background-color:#e9e4e4;
+  color:rgba(10,10,10,0.8);
+  border:1px solid rgba(20, 18, 18, 0.6);
+}
+
+.toggle-substitution.selected {
+  background-color:rgb(162, 185, 150, 0.8);
+  color: rgba(0,0,0,1);
+  border:1px solid rgba(162, 185, 150, 0.6);
 }
 
 ul.ingredients, ol {
@@ -221,6 +330,15 @@ ol {
 
 .recipe .action-button {
   height: unset;
+}
+
+.button-submit {
+  font-size: 20px;
+  padding: 8px;
+  margin: 4px;
+  border-radius: 2px;
+  border: 1px solid #ffaa00a2;
+  background-color:#ffaa004e;
 }
 
 .recipe .scrollable-content {

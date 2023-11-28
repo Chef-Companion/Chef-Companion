@@ -24,7 +24,7 @@ class RecipeMatch():
 
         # HYPERPARAMTERS
         self.coverage_bias = 0.1
-        self.unnecessary_ingredient_penalty = 0.05
+        self.unnecessary_ingredient_penalty = 0.01
         self.unavailable_ingredient_penalty = 0.25
 
         #debug(f'finished creating RecipeMatch\nrecipes: {self.recipes}\n\ningredients: {self.ingredients}\n\nrecipe_matrix: \n{self.recipe_matrix}\n\nsubstitutions: {self.substitution_matrix}')
@@ -101,18 +101,19 @@ class RecipeMatch():
         ''' SETUP SELECTION SPECIFIC MATRICES '''
         # create an ingredient vector where 1 = ingredient is selected, else 0
         selected_ingredients_matrix = self.compute_selected_ingredients_vector(selected_ingredients)
+        forbidden_penalties = np.zeros((len(self.recipe_matrix),))
         if forbidden_ingredients is not None:
             forbidden_ingredients_matrix = self.compute_selected_ingredients_vector(forbidden_ingredients)
-            forbidden_ingredients_matrix = np.where(forbidden_ingredients_matrix < 0.5, forbidden_ingredients_matrix, -1e12)
-            selected_ingredients_matrix += forbidden_ingredients_matrix
-        debug(f"selected_ingredients_matrix: {selected_ingredients_matrix}")
+            forbidden_penalties = self.recipe_matrix @ forbidden_ingredients_matrix
+            forbidden_penalties = np.where(forbidden_penalties > 0.1, 1e6, 0)
+        debug_output(f"selected_ingredients_matrix: {selected_ingredients_matrix}")
 
         # compute substitution matrix for selected ingredients
         substitution_matrix = np.zeros((len(self.ingredients),))
         for ingredient in selected_ingredients:
             substitution_matrix = np.maximum(substitution_matrix, self.substitution_matrix[self.ingredient_ID(ingredient)])
         substitution_matrix = substitution_matrix * (1 - selected_ingredients_matrix)
-        debug(f"substitution_matrix: {substitution_matrix}")
+        debug_output(f"substitution_matrix: {substitution_matrix}")
         
 
         ''' NEEDED AND SELECTED '''
@@ -131,22 +132,22 @@ class RecipeMatch():
         else:
             needed_ingredient_not_present = (needed_ingredient_not_present) * self.recipe_matrix
         needed_ingredient_not_present[needed_ingredient_not_present < 0] = 0 # because we do not care about the case where selected ingedient is not needed
-        debug(f"needed_ingredient_not_present: {needed_ingredient_not_present}")
+        debug_output(f"needed_ingredient_not_present: {needed_ingredient_not_present}")
 
 
         ''' NOT NEEDED INGREDIENTS BUT SELECTED '''
         # create an ingredient vector where 1 = not needed ingredient is selected, else 0
         not_needed_ingredient_present = -self.boolean_recipe_matrix + selected_ingredients_matrix
         not_needed_ingredient_present[not_needed_ingredient_present < 0] = 0 # because we do not care about the case where needed ingredient is not selected
-        debug(f"not_needed_ingredient_present: {not_needed_ingredient_present}")
+        debug_output(f"not_needed_ingredient_present: {not_needed_ingredient_present}")
 
 
         ''' UNSELECTED PERCENTAGE '''
         # percentage of ingredients from recipe that are not selected
         unselected_percentage = np.sum(needed_ingredient_not_present, axis=1) / np.sum(self.recipe_matrix, axis=1)
-        debug(f"not_needed_ingredient_present: {not_needed_ingredient_present}")
+        debug_output(f"not_needed_ingredient_present: {not_needed_ingredient_present}")
 
-        penalty = (self.coverage_bias + unselected_percentage) * ((np.sum(needed_ingredient_not_present, axis=1) * self.unavailable_ingredient_penalty + np.sum(not_needed_ingredient_present, axis=1) * self.unnecessary_ingredient_penalty)) # the higher the penalty, the worst the recipe is
+        penalty = forbidden_penalties + (self.coverage_bias + unselected_percentage) * ((np.sum(needed_ingredient_not_present, axis=1) * self.unavailable_ingredient_penalty + np.sum(not_needed_ingredient_present, axis=1) * self.unnecessary_ingredient_penalty)) # the higher the penalty, the worst the recipe is
         reward = (1 - unselected_percentage) * (10 + np.sum(needed_ingredient_and_present, axis=1))
         score = reward - penalty
         ordering = np.argsort(-score).tolist()
@@ -168,7 +169,7 @@ class RecipeMatch():
 def make_recipe(name, ingredients):
     return {RECIPE_NAME:name, RECIPE_INGREDIENTS:ingredients}
 
-def debug(text):
+def debug_output(text):
     if DEBUG:
         print(text)
     
