@@ -5,6 +5,11 @@ import axios from 'axios';
 function MainPage() {
   const [recipes, setRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
+  const [selectedIngredients, setSelectedIngredients] = useState([]); // new
+  const [checkedIngredients, setCheckedIngredients] = useState([]); // new
+  const [forbiddenIngredients, setForbiddenIngredients] = useState([]); // new
+  const [ingredientsID, setIngredientsID] = useState({});
+  const [ingredientsName, setIngredientsName] = useState({});
   const [showMissing, setShowMissing] = useState(false)
   const [ingredientRestrictions, setIngredientRestrictions] = useState([]);
   const [selected, setSelected] = useState(undefined);
@@ -13,7 +18,7 @@ function MainPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [restrictions, setRestrictions] = useState(false);
   const [substitutionEnable, setSubstitutionEnable] = useState(true);
-  const [ingredientColorful, setIngredientColorful] = useState('blankColor');
+  const [ingredientMode, setIngredientMode] = useState(true);
 
   const handleAddIngredient = () => {
     if (selectedIngredient.trim() !== '') {
@@ -21,9 +26,9 @@ function MainPage() {
   
       if (!isDuplicate) {
         if (restrictions) {
-          setIngredientRestrictions([...ingredientRestrictions, { name: selectedIngredient, checked: false }]);
+          setIngredientRestrictions([...ingredientRestrictions, { name: selectedIngredient, checked: true }]);
         } else {
-          setIngredients([...ingredients, { name: selectedIngredient, checked: false }]);
+          setIngredients([...ingredients, { name: selectedIngredient, checked: true }]);
         }
         setSelectedIngredient('');
       } else {
@@ -31,6 +36,56 @@ function MainPage() {
       }
     }
   };
+
+  const parseIngredients = (vectorizedList, checkedList) => {
+    parsedList = []
+    for (let i = 0; i < vectorizedList.length; ++i) {
+      if (vectorizedList[i] && checkedList[i]) {
+        parsedList.push(ingredientsName[i]);
+      }
+    }
+    console.log(`parsedList ${parsedList}`);
+    return parsedList;
+  }
+
+  const handleIngredientOperation = (ingredient, mode, ingredientMode) => {
+    /*
+    Mode options: 'add', 'remove'
+    ingredientMode options: 'list', 'forbidden', 'checked'
+    */
+    const ingredientID = ingredientsID[ingredient];
+    if (ingredientID == null) {
+      console.log('ingredient error: not found')
+      return
+    }
+    if (mode == 'add') {
+      if (ingredientMode == 'list') {
+        selectedIngredients[ingredientID] = 1;
+        forbiddenIngredients[ingredientID] = 0;
+        checkedIngredients[ingredientID] = 1;
+        console.log('ADDING');
+      } else if (ingredientMode == 'forbidden') {
+        selectedIngredients[ingredientID] = 0;
+        forbiddenIngredients[ingredientID] = 1;
+        checkedIngredients[ingredientID] = 1;
+      } else if (ingredientMode == 'checked') {
+        checkedIngredients[ingredientID] = 1;
+      }
+    } else if (mode == 'remove') {
+      if (ingredientMode == 'list') {
+        selectedIngredients[ingredientID] = 0;
+        checkedIngredients[ingredientID] = 0;
+      } else if (ingredientMode == 'forbidden') {
+        forbiddenIngredients[ingredientID] = 0;
+        checkedIngredients[ingredientID] = 0;
+      } else if (ingredientMode == 'checked') {
+        checkedIngredients[ingredientID] = 0;
+      }
+    }
+    setSelectedIngredients([...selectedIngredients]);
+    setForbiddenIngredients([...forbiddenIngredients]);
+    setCheckedIngredients([...checkedIngredients]);
+  }
 
   const handleRemoveIngredients = () => {
     const filteredIngredients = (restrictions ? ingredientRestrictions : ingredients).filter((ingredient) => !ingredient.checked);
@@ -42,14 +97,13 @@ function MainPage() {
   };
 
   const getRecipesRanked = () => {
-    const filteredIngredients = ingredients
-      .filter((ingredient) => ingredient.checked)
-      .map(x => x.name);
+    const _selectedIngredients = parseIngredients(selectedIngredients, checkedIngredients);
+    const _forbiddenIngredients = parseIngredients(forbiddenIngredients, checkedIngredients);
 
     axios
       .post('/api/recipes_ranked', {
-        selected_ingredients: filteredIngredients,
-        forbidden_ingredients: ingredientRestrictions.map(x => x.name),
+        selected_ingredients: _selectedIngredients,
+        forbidden_ingredients: _forbiddenIngredients,
         enable_substitutions: substitutionEnable
       })
       .then((response) => {
@@ -137,7 +191,23 @@ function MainPage() {
         .then(response => response.json())
         .then(data => setUniqueIngredients(data.unique_ingredients))
         .catch(error => console.error('Error fetching data:', error));
+
+    setSelectedIngredients(Array.from({ length: uniqueIngredients.length }, () => 0));
+    setForbiddenIngredients(Array.from({ length: uniqueIngredients.length }, () => 0));
+    setCheckedIngredients(Array.from({ length: uniqueIngredients.length }, () => 0));
+
+   
   }, []);
+
+  useEffect(() => {
+    let i = 0;
+    for (const ingredient of uniqueIngredients) {
+      ingredientsID[ingredient] = i;
+      ingredientsName[i] = ingredient;
+      i++;
+    }
+    console.log(JSON.stringify(ingredientsID))
+  }, [uniqueIngredients])
 
   return (
     <div className="main-container">
@@ -194,6 +264,25 @@ function MainPage() {
           </ul>
         </div>
       </div>
+      <div className="tab right-tab new">
+        <input
+          type="text"
+          placeholder="Search Ingredients"
+          value={searchQuery}
+          onChange={handleSearch}
+        />
+        {filteredIngredients.map((ingredient, index) => (
+          <div
+            key={index}
+            className={`ingredient ${selectedIngredients[ingredientsID[ingredient]] == 1 ? 'selected' : ''}`}
+          >
+            {ingredient}
+            <span onClick={() =>handleIngredientOperation(ingredient, 'add', 'list')}></span>
+          </div>
+        ))}
+      </div>
+
+
       <div className="tab right-tab">
         <h2 className="tab-header">Ingredients</h2>
         <div className="scrollable-content">
