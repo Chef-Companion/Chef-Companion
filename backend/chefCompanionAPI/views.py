@@ -36,6 +36,7 @@ def recipes(request):
         "Content-Type": "application/json"
         {
             ingredients: ['flour', 'soda', 'salt', 'sugar', 'egg', 'margarine', 'buttermilk'],
+            restrictions: ['macaroni', 'garlic powder', 'tomato juice'],
             ingredient_mode: 'exact', # Match each ingredient exactly, if not 'exact' will assume contains
             ingredients_mode: 'exact' # Only return recipes with the ingredients you have and no extra ingredients, if not 'exact' will assume contains
         }
@@ -45,9 +46,10 @@ def recipes(request):
             # Return status 400 "Bad Request"
             return HttpResponse("Missing ingredients array", status=400)
         ingredients = body['ingredients']
+        restrictions = body['restrictions']
         ingredients_mode = body.get('ingredients_mode', '')
         ingredient_mode = body.get('ingredient_mode', '')
-        query = Q() # new Query
+        query = Q() # new Query for requested ingredients
         for ingredient in ingredients:
             if ingredient_mode == 'exact':
                 # NER in the database looks like this: '["broccoli", "bacon", "green onions", "raisins", "mayonnaise", "vinegar", "sugar"]'
@@ -56,8 +58,11 @@ def recipes(request):
             else:
                 # Search for containing ingredient for example a recipie with "green onions" would be returned when searching for onions
                 query.add(Q(ner__icontains=ingredient), Q.AND)
+        rquery = Q() # new Query for restrictions
+        for ingredient in restrictions:
+            rquery.add(Q(ner__icontains=f'\"{ingredient}\"'), Q.OR)
         # Query the database
-        objects = Recipes.objects.filter(query).all()
+        objects = Recipes.objects.filter(query & ~rquery).all()
         if ingredients_mode == 'exact':
             # Exact length meaning the only recipes with the ingredients inputted and no extra ingredients
             objects = list(filter(lambda x: x.ingredientsLength() == len(ingredients), objects))
