@@ -6,5 +6,6 @@ urlpatterns = [
     path('', views.base),
     path('recipes', views.recipes),
     path('ingredients/', ingredientRequest.as_view()),
-    path('unique-ingredients/', views.unique_ingredients, name='unique_ingredients')
+    path('unique-ingredients/', views.unique_ingredients, name='unique_ingredients'),
+    path('recipes_ranked', views.recipes_ranked)
 ]
