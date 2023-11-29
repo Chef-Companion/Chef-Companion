@@ -5,68 +5,85 @@ import axios from 'axios';
 function MainPage() {
   const [recipes, setRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
+  const [selectedIngredients, setSelectedIngredients] = useState(new Set()); // new
+  const [checkedIngredients, setCheckedIngredients] = useState(new Set()); // new
+  const [forbiddenIngredients, setForbiddenIngredients] = useState(new Set()); // new
   const [showMissing, setShowMissing] = useState(false)
-  const [ingredientRestrictions, setIngredientRestrictions] = useState([]);
   const [selected, setSelected] = useState(undefined);
   const [uniqueIngredients, setUniqueIngredients] = useState([]);
-  const [selectedIngredient, setSelectedIngredient] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [restrictions, setRestrictions] = useState(false)
+  const [substitutionEnable, setSubstitutionEnable] = useState(true);
+  const [ingredientMode, setIngredientMode] = useState(true);
 
-  const handleAddIngredient = () => {
-    if (selectedIngredient.trim() !== '') {
-      const isDuplicate = ingredients.concat(ingredientRestrictions).some((ingredient) => ingredient.name === selectedIngredient);
-  
-      if (!isDuplicate) {
-        if (restrictions) {
-          setIngredientRestrictions([...ingredientRestrictions, { name: selectedIngredient, checked: false }]);
-        } else {
-          setIngredients([...ingredients, { name: selectedIngredient, checked: false }]);
-        }
-        setSelectedIngredient('');
-      } else {
-        console.log('Ingredient already exists in the list.');
+
+  const parseIngredients = (ingredientSet, checkedSet) => {
+    let parsedList = []
+    const ingredientList = [...ingredientSet];
+    for (const e of ingredientList) {
+      if (checkedSet.has(e)) {
+        parsedList.push(e);
       }
     }
-  };
+    return parsedList;
+  }
 
-  const handleRemoveIngredients = () => {
-    const filteredIngredients = (restrictions ? ingredientRestrictions : ingredients).filter((ingredient) => !ingredient.checked);
-    if (restrictions) {
-      setIngredientRestrictions(filteredIngredients);
+  const toggleSelectedIngredient = (ingredient) => {
+    if (!selectedIngredients.has(ingredient)) {
+      selectedIngredients.add(ingredient);
+      forbiddenIngredients.delete(ingredient);
+      checkedIngredients.add(ingredient);
+      setForbiddenIngredients(new Set(forbiddenIngredients));
     } else {
-      setIngredients(filteredIngredients);
+      selectedIngredients.delete(ingredient);
+      checkedIngredients.delete(ingredient);
     }
-  };
+    setSelectedIngredients(new Set(selectedIngredients));
+    setCheckedIngredients(new Set(checkedIngredients));
+  }
 
-  const getRecipes = () => {
-    const filteredIngredients = ingredients
-      .filter((ingredient) => ingredient.checked)
-      .map(x => x.name);
-  
+  const toggleForbiddenIngredient = (ingredient) => {
+    if (!forbiddenIngredients.has(ingredient)) {
+      selectedIngredients.delete(ingredient);
+      forbiddenIngredients.add(ingredient);
+      checkedIngredients.add(ingredient);
+      setSelectedIngredients(new Set(selectedIngredients));
+    } else {
+      forbiddenIngredients.delete(ingredient);
+      checkedIngredients.delete(ingredient);
+    }
+    setForbiddenIngredients(new Set(forbiddenIngredients));
+    setCheckedIngredients(new Set(checkedIngredients));
+  }
+
+  const toggleCheckedIngredient = (ingredient) => {
+    if (!checkedIngredients.has(ingredient)) {
+      checkedIngredients.add(ingredient);
+    } else {
+      checkedIngredients.delete(ingredient);
+    }
+    setCheckedIngredients(new Set(checkedIngredients));
+  }
+
+  const getRecipesRanked = () => {
+    const _selectedIngredients = parseIngredients(selectedIngredients, checkedIngredients);
+    const _forbiddenIngredients = parseIngredients(forbiddenIngredients, checkedIngredients);
+
     axios
-      .post('/api/recipes', {
-        ingredients: filteredIngredients,
-        restrictions: ingredientRestrictions.map(x => x.name),
-        ingredients_mode: 'any',
-        ingredient_mode: 'exact',
+      .post('/api/recipes_ranked', {
+        selected_ingredients: _selectedIngredients,
+        forbidden_ingredients: _forbiddenIngredients,
+        enable_substitutions: substitutionEnable
       })
       .then((response) => {
         setRecipes(response.data.result);
       })
       .catch((error) => {
-        console.error('Error fetching recipes:', error);
-      });
+        console.error("error getting ranked recipes ", error);
+      })
   };
 
-  const handleToggleCheckbox = (index) => {
-    const updatedIngredients = [...(restrictions ? ingredientRestrictions : ingredients)];
-    updatedIngredients[index].checked = !updatedIngredients[index].checked;
-    if (restrictions) {
-      setIngredientRestrictions(updatedIngredients);
-    } else {
-      setIngredients(updatedIngredients);
-    }
+  const toggleSubstitutions = () => {
+    setSubstitutionEnable(!substitutionEnable);
   };
 
   const filteredIngredients = uniqueIngredients.filter(ingredient =>
@@ -75,8 +92,31 @@ function MainPage() {
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
-    setSelectedIngredient('');
   };
+
+  const getColorClass = (score) => {
+    if (score == null) {
+      return 'color-null';
+    }
+    if (score < -100) {
+      return 'color-c0';
+    }
+    if (score < 2) {
+      return 'color-c1';
+    }
+    else if (score < 5) {
+      return 'color-c2';
+    }
+    else if (score < 8) {
+      return 'color-c3';
+    }
+    else if (score < 10) {
+      return 'color-c4';
+    }
+    else {
+      return 'color-c6';
+    }
+  }
 
   useEffect(() => {
     axios.get('/api/recipes')
@@ -86,7 +126,7 @@ function MainPage() {
       .catch((error) => {
         console.error('Error fetching recipes:', error);
       });
-  }, []); 
+  }, []);
 
   useEffect(() => {
     fetch('/api/unique-ingredients/')
@@ -94,6 +134,7 @@ function MainPage() {
         .then(data => setUniqueIngredients(data.unique_ingredients))
         .catch(error => console.error('Error fetching data:', error));
   }, []);
+
 
   return (
     <div className="main-container">
@@ -111,7 +152,7 @@ function MainPage() {
             {showMissing && 
               <h3>Missing Ingredients</h3> &&
               <ul className='ingredients'>
-                {selected.NER.filter((ingredient) => !ingredients.map((i) => i.name).includes(ingredient)).map((x, i) =>
+                {selected.NER.filter((ingredient) => !parseIngredients(selectedIngredients, checkedIngredients).includes(ingredient)).map((x, i) =>
                   <li key={i}>{x}</li>
                 )}
               </ul>
@@ -133,73 +174,77 @@ function MainPage() {
         <div className="scrollable-content">
           <ul className='recipeList'>
             {recipes.map((recipe, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setSelected(recipe);
-                  console.log(recipe)
-                }}
-              >
-                {recipe.title}
-              </button>
+              <span className={getColorClass(recipe.score)} key={index}>
+                <button
+                  className='button-recipe'
+                  onClick={() => {
+                    setSelected(recipe);
+                    console.log(recipe)
+                  }}
+                >
+                  <span className={`${recipe.score !== undefined && recipe.score > 10 ? 'bold' : ''}`}> {recipe.title} </span> <br></br>
+                  {recipe.score !== undefined && recipe.score > 10 && <span className="good-match">Good Match!</span>}
+                </button>
+              </span>
             ))}
           </ul>
         </div>
       </div>
       <div className="tab right-tab">
-        <h2 className="tab-header">Ingredients</h2>
-        <div className="scrollable-content">
-          <div className="unique-ingredients-container">
-            <input
-              type="text"
-              placeholder="Search ingredients"
-              value={searchQuery}
-              onChange={handleSearch}
-            />
-            <ul className="unique-ingredient-list">
-              {filteredIngredients.map((ingredient, index) => (
-                <div
-                  key={index}
-                  className={`ingredient ${selectedIngredient === ingredient ? 'selected' : ''}`}
-                  onClick={() => setSelectedIngredient(ingredient)}
-                >
-                  {ingredient}
-                </div>
-              ))}
-            </ul>
-          </div>
-          <button className="action-button" onClick={handleAddIngredient}>
-            Add Ingredient
-          </button>
-          {!restrictions && 
-          <button className="action-button" onClick={() => setRestrictions(true)}>
-            Switch to Dietary Restrictions List
-          </button>}
-          {restrictions &&
-          <button className="action-button" onClick={() => setRestrictions(false)}>
-            Switch to Ingredient List
-          </button>
-          }
-          <div className="ingredient-list">
-            {!restrictions && <h3> Ingredient List </h3>}
-            {restrictions && <h3> Dietary Restriction List </h3>}
-            {(restrictions ? ingredientRestrictions : ingredients).map((ingredient, index) => (
-              <div className="ingredient-item" key={index}>
-                <input
-                  type="checkbox"
-                  checked={ingredient.checked}
-                  onChange={() => handleToggleCheckbox(index)}
-                  />
-                <p className="ingredient-name">{ingredient.name}</p>
+        <div className="tab right-tab top">
+          <h2 className="tab-header">Ingredients</h2>
+          <input
+            type="text"
+            className="ingredient-search"
+            placeholder="Search Ingredients"
+            value={searchQuery}
+            onChange={handleSearch}
+          />
+          <div className="tab right-tab top scroll">
+            {filteredIngredients.map((ingredient, index) => (
+              <div
+                key={index}
+                className={`ingredient ${selectedIngredients.has(ingredient) ? 'selected' : ''}${forbiddenIngredients.has(ingredient) ? 'forbidden' : ''}`}
+              >
+                <span className='ingredient-entry-name' onClick={() =>toggleSelectedIngredient(ingredient)}>{ingredient}</span>
+                <button className='ingredient-entry-restrict' onClick={() =>toggleForbiddenIngredient(ingredient)}> restrict </button>
               </div>
             ))}
           </div>
-          <button className="action-button" onClick={handleRemoveIngredients}>
-            Remove Selected Ingredients
-          </button>
-          <button className="action-button" onClick={getRecipes}>
-            Generate
-          </button>
+        </div>
+        <div className="tab right-tab bottom">
+          <button className={`button-selected-mode ${ingredientMode ? 'selected' : ''}`} onClick={() =>setIngredientMode(true)}> Selected Ingredients </button>
+          <button className={`button-selected-mode ${!ingredientMode ? 'selected' : ''}`} onClick={() =>setIngredientMode(false)}> Restricted Ingredients </button>
+          {ingredientMode && <div>
+            {[...selectedIngredients].map((ingredient, index) => (
+              <div
+                key={index}
+                className={`ingredient ${checkedIngredients.has(ingredient) ? 'selected2' : ''}`}
+              >
+                {checkedIngredients.has(ingredient) && <span className='checkmark-span'>&#x2713;</span>}
+                {!checkedIngredients.has(ingredient) && <span className='checkmark-span'></span>}
+                <span className='ingredient-entry-name' onClick={() =>toggleCheckedIngredient(ingredient)}>{ingredient}</span>
+                <button className='ingredient-entry-restrict' onClick={() =>toggleSelectedIngredient(ingredient)}> remove </button>
+              </div>
+            ))}
+          </div>}
+          {!ingredientMode && <div>
+            {[...forbiddenIngredients].map((ingredient, index) => (
+              <div
+                key={index}
+                className={`ingredient ${checkedIngredients.has(ingredient) ? 'forbidden2' : ''}`}
+              >
+                {checkedIngredients.has(ingredient) && <span className='checkmark-span'>&#x2713;</span>}
+                {!checkedIngredients.has(ingredient) && <span className='checkmark-span'></span>}
+                <span className='ingredient-entry-name' onClick={() =>toggleCheckedIngredient(ingredient)}>{ingredient}</span>
+                <button className='ingredient-entry-restrict' onClick={() =>toggleForbiddenIngredient(ingredient)}> remove </button>
+              </div>
+            ))}
+          </div>}
+        </div>
+        <div>
+          <button className="button-submit" onClick={getRecipesRanked}>Generate Recipes</button>
+          <button className={`toggle-substitution ${substitutionEnable ? 'selected' : ''}`} onClick={toggleSubstitutions}>substitutions</button>
         </div>
       </div>
     </div>

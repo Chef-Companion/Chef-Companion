@@ -8,8 +8,13 @@ from rest_framework import generics
 from .models import IngredientList
 from .serializers import IngredientListSerializer
 from .utils import get_unique_ingredients
+from .scorer.recipe_match import RecipeMatch
 
 # Create your views here.
+
+recipes = Recipes.objects.all()
+recipes = [object.to_dict() for object in recipes]
+matcher = RecipeMatch(recipes)
 
 @api_view(["GET"])
 def base(request):
@@ -20,6 +25,19 @@ def base(request):
 def unique_ingredients(request):
     unique_ingredients = get_unique_ingredients()
     return JsonResponse({'unique_ingredients': unique_ingredients})
+
+@api_view(["POST"])
+def recipes_ranked(request):
+    print(f'RECEIVED API REQUEST')
+    print(f'recipes: {recipes}')
+
+    body = json.loads(request.body)
+    selected_ingredients = body['selected_ingredients']
+    forbidden_ingredients = body['forbidden_ingredients']
+    enable_substitutions = body['enable_substitutions']
+
+    data, order = matcher.match(selected_ingredients, forbidden_ingredients, enable_substitutions)
+    return JsonResponse({'result': data})
 
 # Return recipes
 @api_view(["POST", "GET"])

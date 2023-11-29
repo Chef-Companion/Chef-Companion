@@ -2,3 +2,7 @@ Django==4.2.6
 python-decouple
 psycopg2
 djangorestframework
+
+numpy
+tensorflow_hub==0.14.0
+tensorflow
