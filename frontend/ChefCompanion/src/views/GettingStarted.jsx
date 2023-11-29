@@ -1,9 +1,9 @@
-import React from 'react';
 import Modal from 'react-modal';
 
 // Set the app element for accessibility
 Modal.setAppElement('#root');
 
+/* eslint react/prop-types: 0 */
 function GettingStartedModal({ isOpen, onRequestClose }) {
     // Define custom styles for the modal
     const modalStyles = {

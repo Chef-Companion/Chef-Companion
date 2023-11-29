@@ -9,6 +9,12 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ]
+  },
   "dependencies": {
     "axios": "^1.6.0",
     "react": "^18.2.0",
