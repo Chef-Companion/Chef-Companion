@@ -3,8 +3,9 @@
   flex-direction: row;
   justify-content: center;
   margin: 5px;
-  margin-top: 5rem;
-  height: calc(100% - 230px);
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  height: calc(100% - 150px);
   width: 100%;
   box-sizing: border-box;
 }
@@ -12,7 +13,7 @@
 .tab {
   width: 200px;
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 16px;
   overflow: hidden;
   text-align: center; /* Center the tab headers */
 }
@@ -21,7 +22,6 @@
   border: 8px solid #ffaa00;
   margin-right: 10px;
   height: 100%; /* Add a maximum height to limit the height */
-  overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
   min-width: 30%;
   overflow-y: hidden;
   box-sizing: border-box;
@@ -34,6 +34,8 @@
   min-width: 30%;
   box-sizing: border-box;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .right-tab .scrollable-content {
@@ -44,13 +46,33 @@
   overflow-y: auto;
 }
 
+
 .scrollable-content {
   height: calc(100% - 75px);
   overflow: hidden;
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 0px;
+  padding-right: 4px;
   display: flex;
   flex-direction: column;
+}
+
+.scrollable-content::-webkit-scrollbar {
+  width: 10px; /* Adjust width for vertical scrollbar */
+  height: 4px; /* Adjust height for horizontal scrollbar */
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+background: #f1f1f100; /* Color of the track */
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+background: rgba(109, 119, 130, 0.5); /* Color of the scroll thumb */
+border-radius: 2px; /* Rounded corners on the scroll thumb */
+}
+
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+background: #555; /* Color of the scroll thumb when hovered */
 }
 
 .tab-header {
@@ -62,13 +84,12 @@
 
 .action-button {
   width: 100%; 
-  height: 50px;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 6px;
+  margin: 4px 0;
   background-color: #ffaa00; 
   color: white; 
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -80,34 +101,12 @@
   background-color: transparent;
 }
 
-.ingredient-list {
-  flex-grow: 2;
-  column-count: 2;
-  column-gap: 10px;
-  align-items: center;
-  overflow-y: auto;
-  display: flex; 
-  flex-direction: column;
-  height: 100%;
-  min-height: 100px;
-  box-sizing: border-box;
-}
-
-.ingredient-item {
-  display: flex;
-  align-items: center; 
-  padding: 10px; 
-  border: none;
-  width: 100%;
-  box-sizing: border-box;
-}
-
 .color-null {
   background-color: #e9e3e3;
 }
 
 .color-c0 {
-  background-color: hsla(0, 28%, 66%, 0.432);
+  background-color: hsla(0, 100%, 51%, 0.432);
   text-decoration: line-through;
 }
 
@@ -145,70 +144,51 @@
   width: 100%;
 }
 
-/* Additional styling for the checkbox */
-input[type="checkbox"] {
-  margin-right: 10px; /* Add spacing between checkbox and ingredient text */
-}
-
-/* Additional styling for the ingredient text */
-.ingredient-name {
-  margin: 0; 
-}
-
 .recipeList {
   flex-direction: column;
+  list-style: none;
+}
+
+.recipeList::-webkit-scrollbar {
+  width: 8px; /* Adjust width for vertical scrollbar */
+  height: 4px; /* Adjust height for horizontal scrollbar */
+}
+
+.recipeList::-webkit-scrollbar-track {
+background: #f1f1f100; /* Color of the track */
+}
+
+.recipeList::-webkit-scrollbar-thumb {
+background: rgba(109, 119, 130, 0.5); /* Color of the scroll thumb */
+border-radius: 2px; /* Rounded corners on the scroll thumb */
+}
+
+.recipeList::-webkit-scrollbar-thumb:hover {
+background: #555; /* Color of the scroll thumb when hovered */
 }
 
 .recipeList button {
   cursor: pointer;
   border: none;
-  font-size: inherit;
-  padding: 10px;
+  font-size: 1em;
+  padding: 6px;
+  width: 100%;
 }
 
 .recipeList button:hover {
-  background-color: #007BFF;
-  color: white;
-}
-
-.unique-ingredients-container {
-  display: flex;
-  flex-direction: column; /* Display ingredients vertically */
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.unique-ingredients-container input {
-  width: 100%;
-  max-width: 400px;
-  padding: 10px;
-  margin: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-.unique-ingredient-list {
-  width: 100%;
-  max-width: 500px;
-  height: 160px;
-  overflow-y: auto; /* Enable vertical scrolling if the list exceeds the container's height */
-  display: flex;
-  flex-direction: column; /* Display ingredients vertically */
-  justify-content: flex-start;
+  background-color: hsla(0,0%,50%, 0.3);
 }
 
 .ingredient {
   padding: 1px;
-  border-radius: 4px;
+  border-radius: 2px;
   border: none;
   cursor: pointer;
   display: flex;
 }
 
 .ingredient:hover {
-  background-color: hsla(0,0%,0%,0);
+  background-color: hsla(0,0%,50%,0.3);
 }
 
 .ingredient.selected {
@@ -216,48 +196,61 @@ input[type="checkbox"] {
   font-weight: 600;
 }
 
+.ingredient.selected:hover {
+  background-color: rgba(147, 173, 147, 0.7);
+}
+
 .ingredient.selected2 {
-  background-color: rgb(227, 228, 212);
+  background-color: rgb(228, 228, 212);
   font-weight: 650;
+}
+
+.ingredient.selected2:hover {
+  background-color: rgb(205, 206, 191);
 }
 
 .ingredient.forbidden {
-  background-color: rgba(205, 176, 169, 0.7);
+  background-color: rgba(213, 181, 172, 0.7);
   font-weight: 600;
 }
 
+.ingredient.forbidden:hover {
+  background-color: rgba(158, 134, 128, 0.7);
+}
+
 .ingredient.forbidden2 {
-  background-color: rgb(227, 228, 212);
+  background-color: rgb(228, 216, 212);
   font-weight: 650;
 }
+
+.ingredient.forbidden2:hover {
+  background-color: rgb(205, 197, 190);
+}
+
 
 .checkmark-span {
   width: 20px;
 }
 
 .ingredient-entry-name {
-  width: 90%;
-  justify-self: left;
-  padding: 3px;
-}
-
-.ingredient-entry-restrict {
-  justify-self: right;
+  font-size: 0.9em;
+  width: 100%;
+  padding: 1px;
 }
 
 .ingredient-search {
-  font-size: 18px;
+  font-size: 1em;
   border-radius: 4px;
   padding: 2px;
-  margin: 8px;
-  width: 90%;
+  margin: 4px;
+  width: auto;
 }
 
 .tab.right-tab.top {
   width: 100%;
-  height: 60%;
+  flex: 6;
   padding: 0px;
-  margin: 1px;
+  margin: 0px;
   border: none;
 }
 
@@ -268,21 +261,40 @@ input[type="checkbox"] {
   border: none;
 }
 
+.tab.right-tab.top.scroll::-webkit-scrollbar {
+  width: 10px; /* Adjust width for vertical scrollbar */
+  height: 4px; /* Adjust height for horizontal scrollbar */
+}
+
+.tab.right-tab.top.scroll::-webkit-scrollbar-track {
+background: #f1f1f100; /* Color of the track */
+}
+
+.tab.right-tab.top.scroll::-webkit-scrollbar-thumb {
+background: rgba(109, 119, 130, 0.5); /* Color of the scroll thumb */
+border-radius: 2px; /* Rounded corners on the scroll thumb */
+}
+
+.tab.right-tab.top.scroll::-webkit-scrollbar-thumb:hover {
+background: #555; /* Color of the scroll thumb when hovered */
+}
+
 .tab.right-tab.bottom {
   width: 100%;
-  height: 30%;
+  flex: 5;
   padding: 0px;
   margin: 0px;
+  margin-top: 20px;
   border: none;
 }
 
 .button-selected-mode {
   background-color:rgb(207, 207, 207);
-  font-size: 16px;
+  font-size: 1em;
   border-radius: 2px;
   border: 1px solid rgba(100,100,100,0.5);
   padding: 4px;
-  margin: 4px;
+  margin: 2px;
 }
 
 .button-selected-mode.selected {
@@ -292,26 +304,41 @@ input[type="checkbox"] {
 }
 
 .toggle-substitution {
-  font-size: 20px;
+  font-size: 1em;
+  font-weight: 550;
   padding: 8px;
-  margin: 4px;
-  border-radius: 2px;
-  background-color:#e9e4e4;
-  color:rgba(10,10,10,0.8);
-  border:1px solid rgba(20, 18, 18, 0.6);
+  margin: 0px;
+  color:rgba(68, 65, 65, 0.8);
+  margin-right: 10px;
+  border: none;
 }
 
+.toggle-substitution:hover {
+  background-color: rgba(147, 150, 147, 0.3);
+  color:#252928;
+  cursor: pointer;
+}
+
+
 .toggle-substitution.selected {
-  background-color:rgb(162, 185, 150, 0.8);
-  color: rgba(0,0,0,1);
-  border:1px solid rgba(162, 185, 150, 0.6);
+  color: #0b0c0b;
+}
+
+.toggle-substitution.selected:hover {
+  background-color: rgba(177, 183, 175, 0.3);
+  cursor: pointer;
+}
+
+.buttons {
+  flex: 1;
+  margin-top: 20px;
 }
 
 ul.ingredients, ol {
   list-style-type: unset;
   display: flex;
   flex-direction: column;
-  padding-left: 20px;
+  padding-left: 30px;
   margin: 0;
   width: 100%;
 }
@@ -325,7 +352,8 @@ ol {
 }
 
 .recipe li {
-  padding: 5px;
+  font-size: 0.9em;
+  padding: 1px;
 }
 
 .recipe .action-button {
@@ -333,12 +361,30 @@ ol {
 }
 
 .button-submit {
-  font-size: 20px;
+  font-size: 1em;
   padding: 8px;
-  margin: 4px;
+  margin-right: 10px;
   border-radius: 2px;
   border: 1px solid #ffaa00a2;
-  background-color:#ffaa004e;
+  background-color:rgba(255, 170, 0, 0.553);
+}
+
+.button-clear {
+  font-size: 1em;
+  padding: 8px;
+  margin: 0px;
+  border-radius: 2px;
+  background-color:#e9e4e4;
+  color:rgba(10,10,10,0.8);
+  border:1px solid rgba(20, 18, 18, 0.6);
+}
+
+.button-clear:hover {
+  background-color: hsla(0, 10%, 10%, 0.2);
+}
+
+.button-submit:hover {
+  background-color:#ffc44d4e;
 }
 
 .recipe .scrollable-content {

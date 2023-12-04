@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './NavBar.css';
 
@@ -9,7 +8,7 @@ function NavBar() {
     <nav className="nav">
       <ul className="centered-nav-links"> 
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/landing">Search</Link></li>
+        <li><Link to="/main">Search</Link></li>
         {/*   LOGIN FEATURE - POTENTIAL FUTURE USE
         
         <li><Link to="/login">Login</Link></li>

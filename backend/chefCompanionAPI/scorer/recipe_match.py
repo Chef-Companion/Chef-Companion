@@ -13,7 +13,7 @@ class RecipeMatch():
 
         # id must be unique and continuous, starting from 0
         # ingredient names within recipes must match to an ingredient within ingredients, pass none as ingredients to auto-generate
-        self.recipes = recipes
+        self.recipes = self.normalize(recipes)
         self.ingredients, self.ingredients_vector = self.get_all_ingredients()
 
         self.recipe_matrix = self.compute_recipe_ingredient_matrix()
@@ -29,6 +29,11 @@ class RecipeMatch():
 
         #debug(f'finished creating RecipeMatch\nrecipes: {self.recipes}\n\ningredients: {self.ingredients}\n\nrecipe_matrix: \n{self.recipe_matrix}\n\nsubstitutions: {self.substitution_matrix}')
 
+
+    def normalize(self, recipes):
+        for recipe in recipes:
+            recipe[RECIPE_INGREDIENTS] = [e.casefold() for e in recipe[RECIPE_INGREDIENTS]]
+        return recipes
 
     def get_all_ingredients(self):
         ingredients = {}
@@ -95,6 +100,9 @@ class RecipeMatch():
         - Ingredient urgency: a value specified by the user on how much they want to use the ingredient.
             it is by default 0.1, but can be set anywhere from 0 to 10.
         '''
+
+        selected_ingredients = [e.casefold() for e in selected_ingredients]
+        forbidden_ingredients = [e.casefold() for e in forbidden_ingredients]
         
         print(f'received matching call: selected {selected_ingredients}\nforbidden {forbidden_ingredients}\nsubstitution {substitutions}')
 

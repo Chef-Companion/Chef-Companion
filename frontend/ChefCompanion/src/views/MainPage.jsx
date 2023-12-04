@@ -4,7 +4,6 @@ import axios from 'axios';
 
 function MainPage() {
   const [recipes, setRecipes] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
   const [selectedIngredients, setSelectedIngredients] = useState(new Set()); // new
   const [checkedIngredients, setCheckedIngredients] = useState(new Set()); // new
   const [forbiddenIngredients, setForbiddenIngredients] = useState(new Set()); // new
@@ -88,10 +87,17 @@ function MainPage() {
 
   const filteredIngredients = uniqueIngredients.filter(ingredient =>
     ingredient.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ).map(ingredient => ingredient.toLowerCase())
+  .sort();
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const clearSelections = () => {
+    setSelectedIngredients(new Set());
+    setCheckedIngredients(new Set());
+    setForbiddenIngredients(new Set());
   };
 
   const getColorClass = (score) => {
@@ -150,12 +156,14 @@ function MainPage() {
             </ul>
             <button className='action-button' onClick={() => setShowMissing(!showMissing)}> {showMissing ? "Hide" : "Show"} Missing Ingredients</button>
             {showMissing && 
-              <h3>Missing Ingredients</h3> &&
-              <ul className='ingredients'>
-                {selected.NER.filter((ingredient) => !parseIngredients(selectedIngredients, checkedIngredients).includes(ingredient)).map((x, i) =>
-                  <li key={i}>{x}</li>
-                )}
-              </ul>
+              <div>
+                <h3>Missing Ingredients</h3>
+                <ul className='ingredients'>
+                  {selected.NER.filter((ingredient) => !parseIngredients(selectedIngredients, checkedIngredients).includes(ingredient)).map((x, i) =>
+                    <li key={i}>{x}</li>
+                  )}
+                </ul>
+              </div>
             }
             <h3>Directions</h3>
             <ol className='ingredients'>
@@ -213,38 +221,46 @@ function MainPage() {
           </div>
         </div>
         <div className="tab right-tab bottom">
-          <button className={`button-selected-mode ${ingredientMode ? 'selected' : ''}`} onClick={() =>setIngredientMode(true)}> Selected Ingredients </button>
-          <button className={`button-selected-mode ${!ingredientMode ? 'selected' : ''}`} onClick={() =>setIngredientMode(false)}> Restricted Ingredients </button>
-          {ingredientMode && <div>
-            {[...selectedIngredients].map((ingredient, index) => (
-              <div
-                key={index}
-                className={`ingredient ${checkedIngredients.has(ingredient) ? 'selected2' : ''}`}
-              >
-                {checkedIngredients.has(ingredient) && <span className='checkmark-span'>&#x2713;</span>}
-                {!checkedIngredients.has(ingredient) && <span className='checkmark-span'></span>}
-                <span className='ingredient-entry-name' onClick={() =>toggleCheckedIngredient(ingredient)}>{ingredient}</span>
-                <button className='ingredient-entry-restrict' onClick={() =>toggleSelectedIngredient(ingredient)}> remove </button>
-              </div>
-            ))}
-          </div>}
-          {!ingredientMode && <div>
-            {[...forbiddenIngredients].map((ingredient, index) => (
-              <div
-                key={index}
-                className={`ingredient ${checkedIngredients.has(ingredient) ? 'forbidden2' : ''}`}
-              >
-                {checkedIngredients.has(ingredient) && <span className='checkmark-span'>&#x2713;</span>}
-                {!checkedIngredients.has(ingredient) && <span className='checkmark-span'></span>}
-                <span className='ingredient-entry-name' onClick={() =>toggleCheckedIngredient(ingredient)}>{ingredient}</span>
-                <button className='ingredient-entry-restrict' onClick={() =>toggleForbiddenIngredient(ingredient)}> remove </button>
-              </div>
-            ))}
-          </div>}
+          <div>
+            <button className={`button-selected-mode ${ingredientMode ? 'selected' : ''}`} onClick={() =>setIngredientMode(true)}> Selected Ingredients </button>
+            <button className={`button-selected-mode ${!ingredientMode ? 'selected' : ''}`} onClick={() =>setIngredientMode(false)}> Restricted Ingredients </button>
+          </div>
+          <div className="tab right-tab top scroll">
+            {ingredientMode && <div>
+              {[...selectedIngredients].sort().map((ingredient, index) => (
+                <div
+                  key={index}
+                  className={`ingredient ${checkedIngredients.has(ingredient) ? 'selected2' : ''}`}
+                >
+                  {checkedIngredients.has(ingredient) && <span className='checkmark-span'>&#x2713;</span>}
+                  {!checkedIngredients.has(ingredient) && <span className='checkmark-span'></span>}
+                  <span className='ingredient-entry-name' onClick={() =>toggleCheckedIngredient(ingredient)}>{ingredient}</span>
+                  <button className='ingredient-entry-restrict' onClick={() =>toggleSelectedIngredient(ingredient)}> remove </button>
+                </div>
+              ))}
+            </div>}
+            {!ingredientMode && <div>
+              {[...forbiddenIngredients].sort().map((ingredient, index) => (
+                <div
+                  key={index}
+                  className={`ingredient ${checkedIngredients.has(ingredient) ? 'forbidden2' : ''}`}
+                >
+                  {checkedIngredients.has(ingredient) && <span className='checkmark-span'>&#x2713;</span>}
+                  {!checkedIngredients.has(ingredient) && <span className='checkmark-span'></span>}
+                  <span className='ingredient-entry-name' onClick={() =>toggleCheckedIngredient(ingredient)}>{ingredient}</span>
+                  <button className='ingredient-entry-restrict' onClick={() =>toggleForbiddenIngredient(ingredient)}> remove </button>
+                </div>
+              ))}
+            </div>}
+          </div>
         </div>
-        <div>
+        <div className="buttons">
           <button className="button-submit" onClick={getRecipesRanked}>Generate Recipes</button>
-          <button className={`toggle-substitution ${substitutionEnable ? 'selected' : ''}`} onClick={toggleSubstitutions}>substitutions</button>
+          <button className={`toggle-substitution ${substitutionEnable ? 'selected' : ''}`} onClick={toggleSubstitutions}>
+            {substitutionEnable && <span>&#x1F5F9; substitutions </span>}
+            {!substitutionEnable && <span>&#x2610; substitutions </span>}
+          </button>
+          <button className="button-clear" onClick={clearSelections}>Clear</button>
         </div>
       </div>
     </div>
