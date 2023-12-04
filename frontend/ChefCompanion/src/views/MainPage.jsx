@@ -87,10 +87,17 @@ function MainPage() {
 
   const filteredIngredients = uniqueIngredients.filter(ingredient =>
     ingredient.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ).map(ingredient => ingredient.toLowerCase())
+  .sort();
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const clearSelections = () => {
+    setSelectedIngredients(new Set());
+    setCheckedIngredients(new Set());
+    setForbiddenIngredients(new Set());
   };
 
   const getColorClass = (score) => {
@@ -213,7 +220,6 @@ function MainPage() {
             ))}
           </div>
         </div>
-        <br></br>
         <div className="tab right-tab bottom">
           <div>
             <button className={`button-selected-mode ${ingredientMode ? 'selected' : ''}`} onClick={() =>setIngredientMode(true)}> Selected Ingredients </button>
@@ -221,7 +227,7 @@ function MainPage() {
           </div>
           <div className="tab right-tab top scroll">
             {ingredientMode && <div>
-              {[...selectedIngredients].map((ingredient, index) => (
+              {[...selectedIngredients].sort().map((ingredient, index) => (
                 <div
                   key={index}
                   className={`ingredient ${checkedIngredients.has(ingredient) ? 'selected2' : ''}`}
@@ -234,7 +240,7 @@ function MainPage() {
               ))}
             </div>}
             {!ingredientMode && <div>
-              {[...forbiddenIngredients].map((ingredient, index) => (
+              {[...forbiddenIngredients].sort().map((ingredient, index) => (
                 <div
                   key={index}
                   className={`ingredient ${checkedIngredients.has(ingredient) ? 'forbidden2' : ''}`}
@@ -248,10 +254,13 @@ function MainPage() {
             </div>}
           </div>
         </div>
-        <br></br>
         <div className="buttons">
           <button className="button-submit" onClick={getRecipesRanked}>Generate Recipes</button>
-          <button className={`toggle-substitution ${substitutionEnable ? 'selected' : ''}`} onClick={toggleSubstitutions}>substitutions</button>
+          <button className={`toggle-substitution ${substitutionEnable ? 'selected' : ''}`} onClick={toggleSubstitutions}>
+            {substitutionEnable && <span>&#x1F5F9; substitutions </span>}
+            {!substitutionEnable && <span>&#x2610; substitutions </span>}
+          </button>
+          <button className="button-clear" onClick={clearSelections}>Clear</button>
         </div>
       </div>
     </div>
