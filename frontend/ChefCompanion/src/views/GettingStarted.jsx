@@ -31,7 +31,7 @@ function GettingStartedModal({ isOpen, onRequestClose }) {
                 Add ingredients from the search bar to your list, and click the checkbox for them to be selected in your recipe search.
             </p>
             <p>
-                When you are ready to search for recipes, click the "Generate Recipes" button to view the list of recipes which contain the ingredients you have checked off.
+                When you are ready to search for recipes, click the &quot;Generate Recipes&quot; button to view the list of recipes which contain the ingredients you have checked off.
             </p>
             <p>
                 To view a recipe, click on it to open a side panel displaying the ingredients and instructions.
