@@ -3,8 +3,9 @@
   flex-direction: row;
   justify-content: center;
   margin: 5px;
-  margin-top: 5rem;
-  height: calc(100% - 230px);
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  height: calc(100% - 170px);
   width: 100%;
   box-sizing: border-box;
 }
@@ -12,7 +13,7 @@
 .tab {
   width: 200px;
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 16px;
   overflow: hidden;
   text-align: center; /* Center the tab headers */
 }
@@ -21,8 +22,7 @@
   border: 8px solid #ffaa00;
   margin-right: 10px;
   height: 100%; /* Add a maximum height to limit the height */
-  overflow-y: auto; /* Add a vertical scrollbar when it exceeds the max height */
-  min-width: 30%;
+  min-width: 25%;
   overflow-y: hidden;
   box-sizing: border-box;
 }
@@ -31,9 +31,11 @@
   border: 8px solid #ffaa00;
   margin-left: 10px;
   height: 100%;
-  min-width: 30%;
+  min-width: 25%;
   box-sizing: border-box;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .right-tab .scrollable-content {
@@ -44,6 +46,7 @@
   overflow-y: auto;
 }
 
+
 .scrollable-content {
   height: calc(100% - 75px);
   overflow: hidden;
@@ -51,6 +54,24 @@
   padding: 10px;
   display: flex;
   flex-direction: column;
+}
+
+.scrollable-content::-webkit-scrollbar {
+  width: 10px; /* Adjust width for vertical scrollbar */
+  height: 4px; /* Adjust height for horizontal scrollbar */
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+background: #f1f1f100; /* Color of the track */
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+background: rgba(109, 119, 130, 0.5); /* Color of the scroll thumb */
+border-radius: 2px; /* Rounded corners on the scroll thumb */
+}
+
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+background: #555; /* Color of the scroll thumb when hovered */
 }
 
 .tab-header {
@@ -85,7 +106,7 @@
   column-count: 2;
   column-gap: 10px;
   align-items: center;
-  overflow-y: auto;
+  overflow-y: scroll;
   display: flex; 
   flex-direction: column;
   height: 100%;
@@ -157,18 +178,37 @@ input[type="checkbox"] {
 
 .recipeList {
   flex-direction: column;
+  list-style: none;
+}
+
+.recipeList::-webkit-scrollbar {
+  width: 10px; /* Adjust width for vertical scrollbar */
+  height: 4px; /* Adjust height for horizontal scrollbar */
+}
+
+.recipeList::-webkit-scrollbar-track {
+background: #f1f1f100; /* Color of the track */
+}
+
+.recipeList::-webkit-scrollbar-thumb {
+background: rgba(109, 119, 130, 0.5); /* Color of the scroll thumb */
+border-radius: 2px; /* Rounded corners on the scroll thumb */
+}
+
+.recipeList::-webkit-scrollbar-thumb:hover {
+background: #555; /* Color of the scroll thumb when hovered */
 }
 
 .recipeList button {
   cursor: pointer;
   border: none;
   font-size: inherit;
-  padding: 10px;
+  padding: 7px;
+  width: 100%;
 }
 
 .recipeList button:hover {
-  background-color: #007BFF;
-  color: white;
+  background-color: hsla(0,0%,50%, 0.3);
 }
 
 .unique-ingredients-container {
@@ -183,7 +223,7 @@ input[type="checkbox"] {
   width: 100%;
   max-width: 400px;
   padding: 10px;
-  margin: 10px;
+  margin: 0px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-sizing: border-box;
@@ -208,7 +248,7 @@ input[type="checkbox"] {
 }
 
 .ingredient:hover {
-  background-color: hsla(0,0%,0%,0);
+  background-color: hsla(0,0%,50%,0.3);
 }
 
 .ingredient.selected {
@@ -216,29 +256,47 @@ input[type="checkbox"] {
   font-weight: 600;
 }
 
+.ingredient.selected:hover {
+  background-color: rgba(147, 173, 147, 0.7);
+}
+
 .ingredient.selected2 {
-  background-color: rgb(227, 228, 212);
+  background-color: rgb(228, 228, 212);
   font-weight: 650;
+}
+
+.ingredient.selected2:hover {
+  background-color: rgb(205, 206, 191);
 }
 
 .ingredient.forbidden {
-  background-color: rgba(205, 176, 169, 0.7);
+  background-color: rgba(213, 181, 172, 0.7);
   font-weight: 600;
 }
 
+.ingredient.forbidden:hover {
+  background-color: rgba(158, 134, 128, 0.7);
+}
+
 .ingredient.forbidden2 {
-  background-color: rgb(227, 228, 212);
+  background-color: rgb(228, 216, 212);
   font-weight: 650;
 }
+
+.ingredient.forbidden2:hover {
+  background-color: rgb(205, 197, 190);
+}
+
 
 .checkmark-span {
   width: 20px;
 }
 
 .ingredient-entry-name {
+  font-size: 0.9em;
   width: 90%;
   justify-self: left;
-  padding: 3px;
+  padding: 1px;
 }
 
 .ingredient-entry-restrict {
@@ -246,18 +304,18 @@ input[type="checkbox"] {
 }
 
 .ingredient-search {
-  font-size: 18px;
+  font-size: 1em;
   border-radius: 4px;
-  padding: 2px;
-  margin: 8px;
+  padding: 0px;
+  margin: 0px;
   width: 90%;
 }
 
 .tab.right-tab.top {
   width: 100%;
-  height: 60%;
+  flex: 7;
   padding: 0px;
-  margin: 1px;
+  margin: 0px;
   border: none;
 }
 
@@ -268,9 +326,27 @@ input[type="checkbox"] {
   border: none;
 }
 
+.tab.right-tab.top.scroll::-webkit-scrollbar {
+  width: 10px; /* Adjust width for vertical scrollbar */
+  height: 4px; /* Adjust height for horizontal scrollbar */
+}
+
+.tab.right-tab.top.scroll::-webkit-scrollbar-track {
+background: #f1f1f100; /* Color of the track */
+}
+
+.tab.right-tab.top.scroll::-webkit-scrollbar-thumb {
+background: rgba(109, 119, 130, 0.5); /* Color of the scroll thumb */
+border-radius: 2px; /* Rounded corners on the scroll thumb */
+}
+
+.tab.right-tab.top.scroll::-webkit-scrollbar-thumb:hover {
+background: #555; /* Color of the scroll thumb when hovered */
+}
+
 .tab.right-tab.bottom {
   width: 100%;
-  height: 30%;
+  flex: 5;
   padding: 0px;
   margin: 0px;
   border: none;
@@ -281,7 +357,7 @@ input[type="checkbox"] {
   font-size: 16px;
   border-radius: 2px;
   border: 1px solid rgba(100,100,100,0.5);
-  padding: 4px;
+  padding: 0px;
   margin: 4px;
 }
 
@@ -292,14 +368,19 @@ input[type="checkbox"] {
 }
 
 .toggle-substitution {
-  font-size: 20px;
+  font-size: 1em;
   padding: 8px;
-  margin: 4px;
+  margin: 0px;
   border-radius: 2px;
   background-color:#e9e4e4;
   color:rgba(10,10,10,0.8);
   border:1px solid rgba(20, 18, 18, 0.6);
 }
+
+.toggle-substitution:hover {
+  background-color: rgba(211, 224, 207, 0.7);
+}
+
 
 .toggle-substitution.selected {
   background-color:rgb(162, 185, 150, 0.8);
@@ -307,11 +388,19 @@ input[type="checkbox"] {
   border:1px solid rgba(162, 185, 150, 0.6);
 }
 
+.toggle-substitution.selected:hover {
+  background-color: rgba(172, 196, 163, 0.7);
+}
+
+.buttons {
+  flex: 1;
+}
+
 ul.ingredients, ol {
   list-style-type: unset;
   display: flex;
   flex-direction: column;
-  padding-left: 20px;
+  padding-left: 30px;
   margin: 0;
   width: 100%;
 }
@@ -325,7 +414,8 @@ ol {
 }
 
 .recipe li {
-  padding: 5px;
+  font-size: 0.9em;
+  padding: 1px;
 }
 
 .recipe .action-button {
@@ -333,12 +423,16 @@ ol {
 }
 
 .button-submit {
-  font-size: 20px;
+  font-size: 1em;
   padding: 8px;
-  margin: 4px;
+  margin-right: 10px;
   border-radius: 2px;
   border: 1px solid #ffaa00a2;
-  background-color:#ffaa004e;
+  background-color:rgba(255, 170, 0, 0.553);
+}
+
+.button-submit:hover {
+  background-color:#ffc44d4e;
 }
 
 .recipe .scrollable-content {
