@@ -1,6 +1,7 @@
 # Chef Companion Coding Standards
 This document will contain our agreed upon coding standards for development.
-
+## JavaScript Code Format
+All code in this language should be run through Prettier for consistent code formatting.
 ## Issues
 All contributions must begin with a GitHub Issue, and be tracked on the [Project Board](https://github.com/orgs/Chef-Companion/projects/2/views/1), as well as the [Issue Page](https://github.com/Chef-Companion/Chef-Companion/issues) of the repository. Once an issue exists, a branch can be created to begin development. Every branch must be linked to an issue.
 
