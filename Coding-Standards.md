@@ -1,6 +1,7 @@
 # Chef Companion Coding Standards
 This document will contain our agreed upon coding standards for development.
-
+## Code Formatting & Conventions
+With a small project like this, restrictions will be rather relaxed. Prettier and ESLint on their default settings will be used to enforce naming conventions, format, and structure for JavaScript. There will be no checks for python, however [PEP8](https://peps.python.org/pep-0008/) will be expected.
 ## Issues
 All contributions must begin with a GitHub Issue, and be tracked on the [Project Board](https://github.com/orgs/Chef-Companion/projects/2/views/1), as well as the [Issue Page](https://github.com/Chef-Companion/Chef-Companion/issues) of the repository. Once an issue exists, a branch can be created to begin development. Every branch must be linked to an issue.
 
